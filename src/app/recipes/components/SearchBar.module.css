@@ -1,0 +1,95 @@
+.searchContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.searchToggle {
+    background: none;
+    border: 2px solid #ff6b35;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.searchToggle:hover {
+    background-color: #ff6b35;
+    transform: scale(1.05);
+}
+
+.searchInputContainer {
+    position: relative;
+    width: 0;
+    overflow: hidden;
+    transition: width 0.3s ease;
+}
+
+.searchInputContainer.visible {
+    width: 300px;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 10px 40px 10px 16px;
+    border: 2px solid #ff6b35;
+    border-radius: 25px;
+    font-size: 14px;
+    outline: none;
+    transition: box-shadow 0.2s ease;
+}
+
+.searchInput:focus {
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+.searchInput::placeholder {
+    color: #999;
+}
+
+.clearButton {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #999;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: color 0.2s ease;
+}
+
+.clearButton:hover {
+    color: #ff6b35;
+    background-color: #f5f5f5;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .searchInputContainer.visible {
+        width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .searchInputContainer.visible {
+        width: 200px;
+    }
+
+    .searchInput {
+        font-size: 13px;
+        padding: 8px 35px 8px 12px;
+    }
+}

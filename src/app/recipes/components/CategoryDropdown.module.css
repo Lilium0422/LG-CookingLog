@@ -1,0 +1,114 @@
+.categoryDropdown {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.dropdownToggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    justify-content: space-between;
+}
+
+.dropdownToggle:hover {
+    background-color: #e55a2b;
+    transform: translateY(-1px);
+}
+
+.selectedCategory {
+    flex: 1;
+    text-align: left;
+}
+
+.arrow {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.arrow.open {
+    transform: rotate(180deg);
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 4px;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.categoryItem {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.categoryItem:last-child {
+    border-bottom: none;
+}
+
+.categoryItem:hover {
+    background-color: #f8f9fa;
+}
+
+.categoryItem.active {
+    background-color: #fff5f2;
+    color: #ff6b35;
+    font-weight: 600;
+}
+
+.categoryItem.active:hover {
+    background-color: #fff0eb;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .dropdownToggle {
+        font-size: 13px;
+        padding: 8px 14px;
+        min-width: 100px;
+    }
+
+    .categoryItem {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}

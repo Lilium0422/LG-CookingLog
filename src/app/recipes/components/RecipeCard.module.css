@@ -1,0 +1,151 @@
+.recipeCard {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.recipeCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.imageContainer {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.recipeImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.recipeCard:hover .recipeImage {
+    transform: scale(1.05);
+}
+
+.cardContent {
+    padding: 20px;
+}
+
+.recipeTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.recipeDescription {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 16px 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.recipeInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.star {
+    font-size: 16px;
+}
+
+.ratingValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.metadata {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.category {
+    font-size: 12px;
+    color: #666;
+    background-color: #f0f0f0;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.hashtags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.hashtag {
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.hashtag:hover {
+    background-color: #e55a2b;
+}
+
+.authorInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 12px;
+    color: #888;
+}
+
+.createdAt {
+    font-weight: 500;
+}
+
+.author {
+    font-weight: 400;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .cardContent {
+        padding: 16px;
+    }
+
+    .recipeTitle {
+        font-size: 16px;
+    }
+
+    .recipeDescription {
+        font-size: 13px;
+    }
+
+    .authorInfo {
+        font-size: 11px;
+    }
+}
