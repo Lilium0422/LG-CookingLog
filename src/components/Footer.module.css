@@ -1,0 +1,68 @@
+.footer {
+  width: 100%;
+  background: #f5f5f5;
+  padding: 40px 0;
+  border-top: 1px solid #e2e2e2;
+  margin-top: 60px;
+  color: #444;
+  font-size: 14px;
+}
+
+.inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* Left Section */
+.left {
+  flex: 1.2;
+}
+
+.brand {
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.desc {
+  line-height: 1.6;
+  color: #555;
+}
+
+/* Right Section */
+.right {
+  flex: 1;
+  text-align: right;
+}
+
+.teamTitle {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.teamList {
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.program {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .right {
+    text-align: center;
+  }
+}

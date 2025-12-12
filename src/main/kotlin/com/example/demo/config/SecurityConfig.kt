@@ -25,11 +25,7 @@ class SecurityConfig {
                 authz
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/users").permitAll() // 회원가입 허용
-                    .requestMatchers("/h2-console/**").permitAll()
                     .anyRequest().authenticated()
-            }
-            .headers { headers ->
-                headers.frameOptions().disable() // H2 콘솔을 위해
             }
         
         return http.build()

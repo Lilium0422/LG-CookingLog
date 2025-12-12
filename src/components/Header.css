@@ -1,0 +1,183 @@
+.header {
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid #e8e8e8;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo img {
+  width: 120px;
+  cursor: pointer;
+}
+
+/* PC NAV */
+.pc-nav {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.separator {
+  color: #d0d0d0;
+}
+
+/* 링크 스타일 */
+.nav-active {
+  color: #000;
+  font-weight: 600;
+}
+
+.nav-inactive {
+  color: #a4a4a4;
+  transition: 0.2s ease;
+}
+
+.nav-dropdown-wrapper {
+  position: relative;
+}
+
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 22px);
+  left: -50px;
+  background: white;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+  display: none;
+  white-space: nowrap;
+  min-width: 150px;
+
+  text-align: center;
+}
+
+/* 드롭다운과 부모 사이의 보이지 않는 브릿지 */
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -22px;
+  left: 0;
+  right: 0;
+  height: 22px;
+  background: transparent;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 8px 0px;
+  color: #a4a4a4;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+  background: #f5f5f5;
+  border-radius: 2px;
+}
+
+.nav-dropdown-wrapper:hover .dropdown-menu,
+.dropdown-menu:hover {
+  display: block;
+}
+
+/* 우측 메뉴 (PC) */
+.pc-menu {
+  display: flex;
+  align-items: center;
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.write-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid #F36E5C;
+  background: white;
+  color: #F36E5C;
+  font-size: 15px;
+}
+
+/* 햄버거 (모바일에서만 표시) */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+/* 모바일 메뉴 초기 상태 */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: #fff;
+  border-top: 1px solid #e8e8e8;
+}
+
+/* 모바일 메뉴 활성화 */
+.mobile-menu.open {
+  display: flex;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .pc-nav,
+  .pc-menu {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .mobile-menu a,
+  .mobile-menu button {
+    font-size: 18px;
+    text-align: left;
+    border: none;
+    background: none;
+    color: #333;
+  }
+
+  .mobile-write {
+    border: 1px solid #F36E5C;
+    border-radius: 20px;
+    padding: 6px 14px;
+    width: 100px;
+    color: #F36E5C;
+  }
+}
+
+.mobile-mypage {
+  font-size: 18px;
+  padding: 8px 0;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #333;
+}
