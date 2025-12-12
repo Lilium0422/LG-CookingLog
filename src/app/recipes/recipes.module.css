@@ -112,6 +112,34 @@
     background-color: rgba(25, 118, 210, 0.1);
 }
 
+.actionBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.writeButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #ff6b35;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.writeButton:hover {
+    background-color: #e55a2b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .mainContent {

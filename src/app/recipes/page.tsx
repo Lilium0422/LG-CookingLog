@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import styles from "./recipes.module.css";
 import RecipeCard from "./components/RecipeCard";
 import SearchBar from "./components/SearchBar";
@@ -175,11 +176,16 @@ export default function RecipesPage() {
           />
         </div>
 
-        {/* 카테고리 드롭다운 */}
-        <CategoryDropdown
-          selectedCategory={selectedCategory}
-          onCategorySelect={handleCategoryChange}
-        />
+        {/* 카테고리 드롭다운과 글쓰기 버튼 */}
+        <div className={styles.actionBar}>
+          <CategoryDropdown
+            selectedCategory={selectedCategory}
+            onCategorySelect={handleCategoryChange}
+          />
+          <Link href="/recipes/write" className={styles.writeButton}>
+            ✏️ 글쓰기
+          </Link>
+        </div>
 
         {/* 현재 필터 상태 표시 */}
         {(searchTerm || selectedHashtag) && (
