@@ -7,7 +7,7 @@ export default function Footer() {
   const pathname = usePathname();
 
   // 로그인 & 마이페이지 Footer 숨김
-  if (pathname === "/login" || pathname === "/mypage") {
+  if (pathname === "/login" || pathname === "/mypage" || pathname === "/signup") {
     return null;
   }
   return (
