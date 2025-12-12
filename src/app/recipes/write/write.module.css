@@ -1,0 +1,336 @@
+.writeContainer {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.writeContent {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    margin-bottom: 40px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.input {
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.input::placeholder {
+    color: #999;
+}
+
+.select {
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.select:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.textarea {
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 200px;
+    transition: border-color 0.2s ease;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.textarea::placeholder {
+    color: #999;
+}
+
+/* 이미지 업로드 */
+.imageUpload {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fileInput {
+    display: none;
+}
+
+.fileLabel {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.fileLabel:hover {
+    background-color: #e8e8e8;
+    border-color: #ccc;
+}
+
+.imagePreview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.imageItem {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+.previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.removeImageBtn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.removeImageBtn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* 재료 섹션 */
+.ingredientSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ingredientItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.ingredientLabel {
+    min-width: 80px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
+.ingredientInput {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.ingredientInput:focus {
+    outline: none;
+    border-color: #ff6b35;
+}
+
+.addBtn {
+    width: 32px;
+    height: 32px;
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.addBtn:hover {
+    background-color: #e55a2b;
+}
+
+/* 태그 */
+.tagInput {
+    margin-bottom: 12px;
+}
+
+.tagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #ff6b35;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.removeTagBtn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.removeTagBtn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 제출 버튼 */
+.submitSection {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.submitBtn {
+    padding: 16px 48px;
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.submitBtn:hover:not(:disabled) {
+    background-color: #e55a2b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+}
+
+.submitBtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .writeContainer {
+        padding: 10px;
+    }
+
+    .writeContent {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .ingredientItem {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .ingredientLabel {
+        min-width: auto;
+    }
+
+    .imageItem {
+        width: 100px;
+        height: 100px;
+    }
+
+    .submitBtn {
+        padding: 14px 32px;
+        font-size: 14px;
+    }
+}
