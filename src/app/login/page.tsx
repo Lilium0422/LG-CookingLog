@@ -14,29 +14,60 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  const handleLogin = () => {
-    const isValid = id === "test" && pw === "1234";
-
-    if (!isValid) {
-      setPopupMessage("아이디/비밀번호를 다시 확인해주세요.");
-      setLoginSuccess(false);
+  const handleLogin = async () => {
+    if (!id || !pw) {
+      setPopupMessage("아이디와 비밀번호를 모두 입력해주세요.");
       return;
     }
 
-    // 로그인 성공
-    localStorage.setItem(
-      "user",
-      JSON.stringify({ id, nickname: id }) // 닉네임 예시로 id 넣음
-    );
+    const loginData = {
+      userId: id,
+      password: pw,
+    };
 
-    setPopupMessage(`${id}님, 로그인이 완료되었습니다!`);
-    setLoginSuccess(true);
+    try {
+      const response = await fetch(
+        "https://after-ungratifying-lilyanna.ngrok-free.dev/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+          body: JSON.stringify(loginData),
+        }
+      );
+
+      console.log("응답 상태:", response.status); // 상태 코드 확인
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        console.log("응답 에러 데이터:", errorData);
+        setPopupMessage("아이디/비밀번호를 다시 확인해주세요.");
+        setLoginSuccess(false);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("응답 데이터:", data); // 서버에서 반환된 데이터 확인
+
+      // 로그인 성공 → 응답 데이터 그대로 저장
+      localStorage.setItem("user", JSON.stringify(data));
+
+      setPopupMessage(`${id}님, 로그인이 완료되었습니다!`);
+      setLoginSuccess(true);
+    } catch (error) {
+      console.error("로그인 오류:", error);
+      setPopupMessage("서버와 연결할 수 없습니다.");
+      setLoginSuccess(false);
+    }
   };
 
   const handlePopupClose = () => {
     setPopupMessage(null);
+
     if (loginSuccess) {
-      router.push("/home"); // 로그인 성공 후 이동
+      router.push("/home");
     }
   };
 
