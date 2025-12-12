@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 
 data class UserCreateRequest(
+    @field:NotBlank(message = "사용자 아이디는 필수입니다")
+    val userId: String,
+    
     @field:NotBlank(message = "닉네임은 필수입니다")
     val nickname: String,
     
@@ -16,6 +19,7 @@ data class UserCreateRequest(
 
 data class UserResponse(
     val id: Long,
+    val userId: String,
     val nickname: String,
     val phoneNumber: String
 )

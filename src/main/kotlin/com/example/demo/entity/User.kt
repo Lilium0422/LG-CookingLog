@@ -12,6 +12,10 @@ data class User(
     val id: Long = 0,
     
     @Column(unique = true, nullable = false)
+    @field:NotBlank(message = "사용자 아이디는 필수입니다")
+    val userId: String,
+    
+    @Column(unique = true, nullable = false)
     @field:NotBlank(message = "닉네임은 필수입니다")
     val nickname: String,
     

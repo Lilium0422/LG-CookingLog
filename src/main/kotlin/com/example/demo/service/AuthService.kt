@@ -16,16 +16,17 @@ class AuthService(
 ) {
     
     fun login(request: LoginRequest): LoginResponse {
-        val user = userRepository.findByNickname(request.nickname)
+        val user = userRepository.findByUserId(request.userId)
             ?: throw RuntimeException("존재하지 않는 사용자입니다")
         
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw RuntimeException("비밀번호가 일치하지 않습니다")
         }
         
-        val token = jwtUtil.generateToken(user.nickname)
+        val token = jwtUtil.generateToken(user.userId)
         val userResponse = UserResponse(
             id = user.id,
+            userId = user.userId,
             nickname = user.nickname,
             phoneNumber = user.phoneNumber
         )

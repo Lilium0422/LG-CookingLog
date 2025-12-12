@@ -17,6 +17,10 @@ class UserService(
     
     fun createUser(request: UserCreateRequest): UserResponse {
         // 중복 체크
+        if (userRepository.existsByUserId(request.userId)) {
+            throw RuntimeException("이미 존재하는 사용자 아이디입니다")
+        }
+        
         if (userRepository.existsByNickname(request.nickname)) {
             throw RuntimeException("이미 존재하는 닉네임입니다")
         }
@@ -29,6 +33,7 @@ class UserService(
         val encodedPassword = passwordEncoder.encode(request.password)
         
         val user = User(
+            userId = request.userId,
             nickname = request.nickname,
             phoneNumber = request.phoneNumber,
             password = encodedPassword
@@ -38,6 +43,7 @@ class UserService(
         
         return UserResponse(
             id = savedUser.id,
+            userId = savedUser.userId,
             nickname = savedUser.nickname,
             phoneNumber = savedUser.phoneNumber
         )
@@ -48,6 +54,7 @@ class UserService(
         return userRepository.findAll().map { user ->
             UserResponse(
                 id = user.id,
+                userId = user.userId,
                 nickname = user.nickname,
                 phoneNumber = user.phoneNumber
             )
@@ -59,6 +66,7 @@ class UserService(
         return userRepository.findById(id).orElse(null)?.let { user ->
             UserResponse(
                 id = user.id,
+                userId = user.userId,
                 nickname = user.nickname,
                 phoneNumber = user.phoneNumber
             )
@@ -70,6 +78,7 @@ class UserService(
         return userRepository.findByNickname(nickname)?.let { user ->
             UserResponse(
                 id = user.id,
+                userId = user.userId,
                 nickname = user.nickname,
                 phoneNumber = user.phoneNumber
             )
