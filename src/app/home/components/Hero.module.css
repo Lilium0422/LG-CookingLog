@@ -1,0 +1,102 @@
+.hero {
+  margin-top: 30px;
+  padding: 30px 0 30px;
+  background: rgba(253, 217, 212, 0.3);
+}
+
+/* 전체 행 */
+.headerRow {
+  position: relative;
+  height: 100px;
+}
+
+/* 텍스트 가운데 고정 */
+.centerText {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.centerText h2 {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.centerText p {
+  margin-top: 12px;
+  font-size: 15px;
+  color: #5d5d5d;
+}
+
+/* 아이콘 오른쪽 */
+.heroIcon {
+  position: absolute;
+  right: 25%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ===== Tablet (1024px 이하) ===== */
+@media (max-width: 1024px) {
+  .heroIcon {
+    right: 8%;
+  }
+
+  .centerText h2 {
+    font-size: 30px;
+  }
+
+  .centerText p {
+    font-size: 18px;
+  }
+}
+
+/* ===== Mobile (768px 이하) ===== */
+@media (max-width: 768px) {
+  .headerRow {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .centerText {
+    position: static;
+    transform: none;
+  }
+
+  .heroIcon {
+    position: static;
+    transform: none;
+  }
+
+  .centerText h2 {
+    font-size: 26px;
+  }
+
+  .centerText p {
+    font-size: 16px;
+  }
+}
+
+/* ===== Small Mobile (480px 이하) ===== */
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 0 80px;
+  }
+
+  .centerText h2 {
+    font-size: 22px;
+  }
+
+  .centerText p {
+    font-size: 14px;
+  }
+
+  .heroIcon img {
+    width: 90px;
+    height: 90px;
+  }
+}

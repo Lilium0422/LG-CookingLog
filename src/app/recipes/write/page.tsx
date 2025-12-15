@@ -4,114 +4,196 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./write.module.css";
 
+// 백엔드 API 명세서에 맞는 데이터 구조
 interface RecipeFormData {
   title: string;
-  content: string;
   category: string;
-  hashtags: string[];
-  images: File[];
+  content: string;
+  imageUrl: string;
+  mainIngredients: string[];
+  seasonings: string[];
+  tags: string[];
+  rating: number;
+  userNickname: string;
 }
 
 const categories = ["한식", "양식", "중식", "일식", "분식", "디저트"];
+
+// 임시 사용자 정보 (실제로는 로그인 정보에서 가져옴)
+const currentUser = {
+  nickname: "요리왕",
+};
 
 export default function RecipeWritePage() {
   const router = useRouter();
   const [formData, setFormData] = useState<RecipeFormData>({
     title: "",
-    content: "",
     category: "",
-    hashtags: [],
-    images: [],
+    content: "",
+    imageUrl: "",
+    mainIngredients: [],
+    seasonings: [],
+    tags: [],
+    rating: 5, // 기본값
+    userNickname: currentUser.nickname,
   });
-  const [hashtagInput, setHashtagInput] = useState("");
+
+  // 입력 필드 상태
+  const [mainIngredientInput, setMainIngredientInput] = useState("");
+  const [seasoningInput, setSeasoningInput] = useState("");
+  const [tagInput, setTagInput] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (field: keyof RecipeFormData, value: string) => {
+  // 일반 입력 필드 변경
+  const handleInputChange = (
+    field: keyof RecipeFormData,
+    value: string | number
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleAddHashtag = () => {
+  // 주재료 추가
+  const handleAddMainIngredient = () => {
     if (
-      hashtagInput.trim() &&
-      !formData.hashtags.includes(`#${hashtagInput.trim()}`)
+      mainIngredientInput.trim() &&
+      !formData.mainIngredients.includes(mainIngredientInput.trim())
     ) {
       setFormData((prev) => ({
         ...prev,
-        hashtags: [...prev.hashtags, `#${hashtagInput.trim()}`],
+        mainIngredients: [...prev.mainIngredients, mainIngredientInput.trim()],
       }));
-      setHashtagInput("");
+      setMainIngredientInput("");
     }
   };
 
-  const handleRemoveHashtag = (tagToRemove: string) => {
+  // 주재료 삭제
+  const handleRemoveMainIngredient = (ingredient: string) => {
     setFormData((prev) => ({
       ...prev,
-      hashtags: prev.hashtags.filter((tag) => tag !== tagToRemove),
+      mainIngredients: prev.mainIngredients.filter(
+        (item) => item !== ingredient
+      ),
     }));
   };
 
+  // 양념 추가
+  const handleAddSeasoning = () => {
+    if (
+      seasoningInput.trim() &&
+      !formData.seasonings.includes(seasoningInput.trim())
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        seasonings: [...prev.seasonings, seasoningInput.trim()],
+      }));
+      setSeasoningInput("");
+    }
+  };
+
+  // 양념 삭제
+  const handleRemoveSeasoning = (seasoning: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      seasonings: prev.seasonings.filter((item) => item !== seasoning),
+    }));
+  };
+
+  // 태그 추가
+  const handleAddTag = () => {
+    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
+      setFormData((prev) => ({
+        ...prev,
+        tags: [...prev.tags, tagInput.trim()],
+      }));
+      setTagInput("");
+    }
+  };
+
+  // 태그 삭제
+  const handleRemoveTag = (tag: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((item) => item !== tag),
+    }));
+  };
+
+  // 이미지 업로드
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      // 임시 URL 생성 (실제로는 서버에 업로드 후 URL 받아야 함)
+      setFormData((prev) => ({
+        ...prev,
+        imageUrl: URL.createObjectURL(file),
+      }));
+    }
+  };
+
+  // 이미지 삭제
+  const handleRemoveImage = () => {
+    setImageFile(null);
     setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...files],
+      imageUrl: "",
     }));
   };
 
-  const handleRemoveImage = (indexToRemove: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, index) => index !== indexToRemove),
-    }));
-  };
-
+  // 폼 제출
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      !formData.title.trim() ||
-      !formData.content.trim() ||
-      !formData.category
-    ) {
-      alert("제목, 내용, 카테고리는 필수 입력 항목입니다.");
+    // 필수 필드 검증
+    if (!formData.title.trim()) {
+      alert("제목을 입력해주세요.");
+      return;
+    }
+    if (!formData.category) {
+      alert("카테고리를 선택해주세요.");
+      return;
+    }
+    if (!formData.content.trim()) {
+      alert("내용을 입력해주세요.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // TODO: 백엔드 API 호출
-      const submitData = new FormData();
-      submitData.append("title", formData.title);
-      submitData.append("content", formData.content);
-      submitData.append("category", formData.category);
-      submitData.append("hashtags", JSON.stringify(formData.hashtags));
-
-      formData.images.forEach((image, index) => {
-        submitData.append(`images`, image);
-      });
-
-      // 임시: 콘솔에 데이터 출력
-      console.log("레시피 작성 데이터:", {
+      // 백엔드 API 명세서에 맞는 데이터 구조
+      const submitData = {
         title: formData.title,
-        content: formData.content,
         category: formData.category,
-        hashtags: formData.hashtags,
-        imageCount: formData.images.length,
-      });
+        content: formData.content,
+        imageUrl: formData.imageUrl || "", // 선택 필드
+        mainIngredients: formData.mainIngredients, // 배열
+        seasonings: formData.seasonings, // 배열
+        tags: formData.tags, // 배열
+        rating: formData.rating,
+        userNickname: formData.userNickname,
+      };
 
-      // API 호출 예시 (실제 구현시 주석 해제)
-      // const response = await fetch('/api/recipes', {
+      console.log("백엔드로 전송할 데이터:", submitData);
+
+      // API 호출 (실제 구현시 주석 해제)
+      // const response = await fetch('http://localhost:8080/api/posts', {
       //   method: 'POST',
-      //   body: submitData
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(submitData),
       // });
       //
       // if (!response.ok) {
       //   throw new Error('레시피 작성에 실패했습니다.');
       // }
+      //
+      // const result = await response.json();
+      // console.log('작성된 레시피:', result);
 
       alert("레시피가 성공적으로 작성되었습니다!");
       router.push("/recipes");
@@ -120,6 +202,17 @@ export default function RecipeWritePage() {
       alert("레시피 작성 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // 키보드 이벤트 핸들러
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    addFunction: () => void
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addFunction();
     }
   };
 
@@ -136,11 +229,10 @@ export default function RecipeWritePage() {
             <label className={styles.label}>제목</label>
             <input
               type="text"
-              placeholder="레시피 제목을 입력하세요"
+              placeholder="제목을 입력해 주세요"
               value={formData.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               className={styles.input}
-              required
             />
           </div>
 
@@ -151,7 +243,6 @@ export default function RecipeWritePage() {
               value={formData.category}
               onChange={(e) => handleInputChange("category", e.target.value)}
               className={styles.select}
-              required
             >
               <option value="">카테고리를 선택해 주세요</option>
               {categories.map((category) => (
@@ -171,18 +262,23 @@ export default function RecipeWritePage() {
               onChange={(e) => handleInputChange("content", e.target.value)}
               className={styles.textarea}
               rows={10}
-              required
             />
           </div>
 
-          {/* 대표 이미지 업로드 */}
+          {/* 완성 이미지 업로드 */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>대표 이미지(필수)</label>
+            <label className={styles.label}>완성 이미지(필수)</label>
             <div className={styles.imageUpload}>
+              <input
+                type="text"
+                placeholder="이미지를 업로드해 주세요"
+                value={imageFile?.name || ""}
+                readOnly
+                className={styles.imageUrlInput}
+              />
               <input
                 type="file"
                 accept="image/*"
-                multiple
                 onChange={handleImageUpload}
                 className={styles.fileInput}
                 id="imageUpload"
@@ -193,24 +289,22 @@ export default function RecipeWritePage() {
             </div>
 
             {/* 업로드된 이미지 미리보기 */}
-            {formData.images.length > 0 && (
+            {formData.imageUrl && (
               <div className={styles.imagePreview}>
-                {formData.images.map((image, index) => (
-                  <div key={index} className={styles.imageItem}>
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt={`업로드 이미지 ${index + 1}`}
-                      className={styles.previewImage}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className={styles.removeImageBtn}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
+                <div className={styles.imageItem}>
+                  <img
+                    src={formData.imageUrl}
+                    alt="업로드 이미지"
+                    className={styles.previewImage}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className={styles.removeImageBtn}
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -218,15 +312,64 @@ export default function RecipeWritePage() {
           {/* 재료 상세 */}
           <div className={styles.formGroup}>
             <label className={styles.label}>재료 상세</label>
+
+            {/* 추가된 재료 목록 */}
+            {(formData.mainIngredients.length > 0 ||
+              formData.seasonings.length > 0) && (
+              <div className={styles.addedIngredients}>
+                {formData.mainIngredients.length > 0 && (
+                  <div className={styles.ingredientList}>
+                    <span className={styles.ingredientListLabel}>주재료:</span>
+                    {formData.mainIngredients.map((ingredient, index) => (
+                      <span key={index} className={styles.ingredientTag}>
+                        {ingredient}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMainIngredient(ingredient)}
+                          className={styles.removeIngredientBtn}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {formData.seasonings.length > 0 && (
+                  <div className={styles.ingredientList}>
+                    <span className={styles.ingredientListLabel}>양념:</span>
+                    {formData.seasonings.map((seasoning, index) => (
+                      <span key={index} className={styles.ingredientTag}>
+                        {seasoning}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSeasoning(seasoning)}
+                          className={styles.removeIngredientBtn}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className={styles.ingredientSection}>
               <div className={styles.ingredientItem}>
                 <span className={styles.ingredientLabel}>주 재료</span>
                 <input
                   type="text"
-                  placeholder="예) 돼지고기 앞다리살 300g"
+                  placeholder="예) 돼지고기 앞다리살 100g"
+                  value={mainIngredientInput}
+                  onChange={(e) => setMainIngredientInput(e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, handleAddMainIngredient)}
                   className={styles.ingredientInput}
                 />
-                <button type="button" className={styles.addBtn}>
+                <button
+                  type="button"
+                  className={styles.addBtn}
+                  onClick={handleAddMainIngredient}
+                >
                   +
                 </button>
               </div>
@@ -234,10 +377,17 @@ export default function RecipeWritePage() {
                 <span className={styles.ingredientLabel}>양념</span>
                 <input
                   type="text"
-                  placeholder="예) 고추장 2큰술"
+                  placeholder="예) 고추장 1큰술"
+                  value={seasoningInput}
+                  onChange={(e) => setSeasoningInput(e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, handleAddSeasoning)}
                   className={styles.ingredientInput}
                 />
-                <button type="button" className={styles.addBtn}>
+                <button
+                  type="button"
+                  className={styles.addBtn}
+                  onClick={handleAddSeasoning}
+                >
                   +
                 </button>
               </div>
@@ -250,28 +400,23 @@ export default function RecipeWritePage() {
             <div className={styles.tagInput}>
               <input
                 type="text"
-                placeholder="태그를 입력하고 엔터를 누르세요"
-                value={hashtagInput}
-                onChange={(e) => setHashtagInput(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleAddHashtag();
-                  }
-                }}
+                placeholder="예) #기념일 #생일 #다이어트 #제육볶음"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, handleAddTag)}
                 className={styles.input}
               />
             </div>
 
             {/* 태그 목록 */}
-            {formData.hashtags.length > 0 && (
+            {formData.tags.length > 0 && (
               <div className={styles.tagList}>
-                {formData.hashtags.map((tag, index) => (
+                {formData.tags.map((tag, index) => (
                   <span key={index} className={styles.tag}>
-                    {tag}
+                    #{tag}
                     <button
                       type="button"
-                      onClick={() => handleRemoveHashtag(tag)}
+                      onClick={() => handleRemoveTag(tag)}
                       className={styles.removeTagBtn}
                     >
                       ×

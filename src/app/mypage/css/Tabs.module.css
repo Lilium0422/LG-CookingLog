@@ -1,0 +1,100 @@
+.tabs {
+  display: flex;
+  margin-top: 50px;
+  margin-left: 50px;
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+}
+
+.tabItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 2rem 4rem;
+  background: #F36E5C;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: fit-content;
+
+  gap: clamp(6px, 1vw, 10px);
+
+  font-size: clamp(13px, 2.5vw, 16px);
+}
+
+/* 첫 번째 탭 */
+.tabItem:nth-child(1) {
+  border-top: 3px solid rgba(0, 0, 0, 0.1);
+  border-left: 3px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  background: #F8F8FF;
+}
+
+/* 두 번째 탭 */
+.tabItem:nth-child(2) {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  background: #F8F8FF;
+}
+
+/* 세 번째 탭 */
+.tabItem:nth-child(3) {
+  border-top: 3px solid rgba(0, 0, 0, 0.1);
+  border-right: 3px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.tabItem span {
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.tabItem:nth-child(3) span {
+  color: #F8F8FF;
+}
+
+.iconWrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconWrapper svg {
+  width: 1.4em;
+  height: 1.4em;
+}
+
+/* 아이콘별 */
+.pen {
+  color: #F36E5C;
+}
+
+.comment {
+  color: #F36E5C;
+}
+
+.profile {
+  width: 24px;
+  height: 24px;
+  color: #F8F8FF;
+}
+
+.iconWrapper img {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 480px) {
+  .tabItem {
+    font-size: 0.8rem;
+  }
+}

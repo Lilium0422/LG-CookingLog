@@ -1,3 +1,9 @@
+.recipeCardLink {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 .recipeCard {
     background: white;
     border-radius: 12px;
@@ -7,7 +13,7 @@
     cursor: pointer;
 }
 
-.recipeCard:hover {
+.recipeCardLink:hover .recipeCard {
     transform: translateY(-4px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
@@ -26,7 +32,7 @@
     transition: transform 0.3s ease;
 }
 
-.recipeCard:hover .recipeImage {
+.recipeCardLink:hover .recipeImage {
     transform: scale(1.05);
 }
 
@@ -74,6 +80,12 @@
     font-size: 14px;
     font-weight: 600;
     color: #333;
+}
+
+.noRating {
+    font-size: 12px;
+    color: #999;
+    font-style: italic;
 }
 
 .metadata {
