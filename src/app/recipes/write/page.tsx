@@ -179,21 +179,29 @@ export default function RecipeWritePage() {
 
       console.log("백엔드로 전송할 데이터:", submitData);
 
-      // API 호출 (실제 구현시 주석 해제)
-      // const response = await fetch('http://localhost:8080/api/posts', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(submitData),
-      // });
-      //
-      // if (!response.ok) {
-      //   throw new Error('레시피 작성에 실패했습니다.');
-      // }
-      //
-      // const result = await response.json();
-      // console.log('작성된 레시피:', result);
+      // API 호출
+      const response = await fetch(
+        "https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+          body: JSON.stringify(submitData),
+        }
+      );
+
+      console.log("응답 상태:", response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("에러 응답:", errorText);
+        throw new Error(`레시피 작성 실패: ${response.status} - ${errorText}`);
+      }
+
+      const result = await response.json();
+      console.log("작성된 레시피:", result);
 
       alert("레시피가 성공적으로 작성되었습니다!");
       router.push("/recipes");
