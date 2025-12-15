@@ -1,38 +1,84 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./recipes.module.css";
 import RecipeCard from "./components/RecipeCard";
 import SearchBar from "./components/SearchBar";
 import CategoryDropdown from "./components/CategoryDropdown";
 
-// 댓글 데이터 (실제로는 API에서 가져올 데이터)
+// 백엔드 API 응답 타입
+interface Recipe {
+  id: number;
+  title: string;
+  content: string;
+  imageUrl: string;
+  rating: number;
+  category: string;
+  tags: string[];
+  userNickname: string;
+  createdAt: string;
+}
+
+// 프론트엔드에서 사용할 레시피 타입
+interface RecipeCardData {
+  id: number;
+  title: string;
+  content: string;
+  image: string;
+  rating: number;
+  category: string;
+  hashtags: string[];
+  author: string;
+  createdAt: string;
+}
+
+// 날짜 포맷 함수
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear().toString().slice(2);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}.${month}.${day}`;
+};
+
+// API 응답을 프론트엔드 형식으로 변환
+const transformRecipe = (recipe: Recipe): RecipeCardData => ({
+  id: recipe.id,
+  title: recipe.title,
+  content: recipe.content,
+  image: recipe.imageUrl || "/images/default-recipe.jpg",
+  rating: recipe.rating || 0,
+  category: recipe.category,
+  hashtags: recipe.tags?.map((tag) => `#${tag}`) || [],
+  author: recipe.userNickname,
+  createdAt: formatDate(recipe.createdAt),
+});
+
+/*
+// 더미 데이터 (백엔드 연동 전 테스트용 - 주석처리)
 const mockComments = {
   1: [
     { rating: 5, author: "사용자1" },
     { rating: 4, author: "사용자2" },
-  ], // 평균: 4.5
+  ],
   2: [
     { rating: 5, author: "사용자3" },
     { rating: 5, author: "사용자4" },
     { rating: 4, author: "사용자5" },
-  ], // 평균: 4.7
-  3: [{ rating: 5, author: "사용자6" }], // 평균: 5.0
-  // 나머지 레시피들은 댓글이 없어서 기본 별점 표시
+  ],
+  3: [{ rating: 5, author: "사용자6" }],
 };
 
-// 별점 평균 계산 함수
 const calculateAverageRating = (recipeId: number) => {
   const comments = mockComments[recipeId as keyof typeof mockComments];
   if (!comments || comments.length === 0) {
-    return 0; // 댓글이 없으면 0점 (별점 없음 표시)
+    return 0;
   }
   const sum = comments.reduce((acc, comment) => acc + comment.rating, 0);
-  return Math.round((sum / comments.length) * 10) / 10; // 소수점 1자리까지
+  return Math.round((sum / comments.length) * 10) / 10;
 };
 
-// 임시 데이터 (나중에 API로 대체)
 const mockRecipes = [
   {
     id: 1,
@@ -156,8 +202,11 @@ const mockRecipes = [
     createdAt: "25.11.29",
   },
 ];
+*/
 
 export default function RecipesPage() {
+  const [recipes, setRecipes] = useState<RecipeCardData[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체 보기");
@@ -166,8 +215,35 @@ export default function RecipesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const recipesPerPage = 9;
 
+  // 백엔드에서 레시피 목록 가져오기
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await fetch(
+          "https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts",
+          {
+            headers: {
+              "ngrok-skip-browser-warning": "true",
+            },
+          }
+        );
+        if (response.ok) {
+          const data: Recipe[] = await response.json();
+          const transformedRecipes = data.map(transformRecipe);
+          setRecipes(transformedRecipes);
+        }
+      } catch (error) {
+        console.error("레시피 목록 조회 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipes();
+  }, []);
+
   // 검색 및 필터링 로직
-  const filteredRecipes = mockRecipes.filter((recipe) => {
+  const filteredRecipes = recipes.filter((recipe) => {
     // 해시태그 필터링 (해시태그가 선택된 경우)
     if (selectedHashtag) {
       const matchesHashtag = recipe.hashtags.includes(selectedHashtag);

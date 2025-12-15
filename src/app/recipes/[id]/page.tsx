@@ -1,76 +1,85 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import styles from "./detail.module.css";
 
-// 임시 데이터 (나중에 API로 대체)
-const mockRecipeDetail = {
-  id: 1,
-  title: "절대 실패없는 제육볶음 레시피",
-  content: `1. 대파와 청양고추는 어슷썰어주고 양파는 1cm 두께로 썰어주세요
+// 백엔드 API 응답 타입
+interface RecipeDetail {
+  id: number;
+  title: string;
+  content: string;
+  imageUrl: string;
+  category: string;
+  tags: string[];
+  mainIngredients: string[];
+  seasonings: string[];
+  rating: number;
+  userNickname: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-2. 냉장고에는 한국고기를 썰어주세요
-
-3. 팬에이는 양념장을 고기와 섞어주세요 (냉장고에서 30분정도 숙성시켜 더 좋습니다)
-
-4. 팬에 식용유 2큰술과 대파를 넣고 강불로 3분정도 볶아 파기름을 내주세요
-
-5. 중불로 돌아 고기를 볶던 의식주세요~약 양념장으로 더 맛있습니다
-
-6. 양파와 청양고추를 넣어주세요~
-
-7. 강불로 2분정도 볶아주면 재료 뽀얀 완성~`,
-  author: "작성자1",
-  createdAt: "2025.12.10 14:30",
-  imageUrl: "/images/recipe1.jpg",
-  category: "한식",
-  tags: ["매운맛", "돼지고기", "볶음"],
-  mainIngredients: [
-    { name: "돼지고기 앞다리살", amount: "600g" },
-    { name: "양파", amount: "1/2개" },
-    { name: "청양고추", amount: "2~3개" },
-    { name: "대파", amount: "1/3개" },
-  ],
-  seasonings: [
-    { name: "고추장", amount: "3큰술" },
-    { name: "고춧가루", amount: "2큰술" },
-    { name: "다진마늘", amount: "1큰술" },
-    { name: "설탕", amount: "2큰술" },
-    { name: "간장", amount: "1큰술" },
-    { name: "통깨", amount: "약간" },
-  ],
-  averageRating: 4.5,
-  totalRatings: 2,
+// 날짜 포맷 함수
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleString("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
 
-const mockComments = [
-  {
-    id: 1,
-    author: "사용자 1",
-    rating: 5,
-    content:
-      "너무 맛있게먹었습니다. 제육볶음 레시피는 항상 이걸로 정착할거같아요.",
-    createdAt: "2025.12.10",
-    likes: 0,
-  },
-  {
-    id: 2,
-    author: "사용자 2",
-    rating: 4,
-    content:
-      "맛있긴 한데, 저한테는 조금 맵네요. 매운걸 못드시면 청양고추는 1개만 넣어서 추천합니다.",
-    createdAt: "2025.12.09",
-    likes: 0,
-  },
-];
-
 export default function RecipeDetailPage() {
-  const [recipe] = useState(mockRecipeDetail);
-  const [comments, setComments] = useState(mockComments);
+  const params = useParams();
+  const recipeId = params.id;
+
+  const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState<
+    {
+      id: number;
+      author: string;
+      rating: number;
+      content: string;
+      createdAt: string;
+      likes: number;
+    }[]
+  >([]);
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+
+  // 백엔드에서 레시피 상세 정보 가져오기
+  useEffect(() => {
+    const fetchRecipeDetail = async () => {
+      try {
+        const response = await fetch(
+          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/${recipeId}`,
+          {
+            headers: {
+              "ngrok-skip-browser-warning": "true",
+            },
+          }
+        );
+        if (response.ok) {
+          const data: RecipeDetail = await response.json();
+          setRecipe(data);
+        }
+      } catch (error) {
+        console.error("레시피 상세 조회 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (recipeId) {
+      fetchRecipeDetail();
+    }
+  }, [recipeId]);
 
   // 별점 렌더링 함수
   const renderStars = (
@@ -127,6 +136,34 @@ export default function RecipeDetailPage() {
     );
   };
 
+  // 로딩 중
+  if (loading) {
+    return (
+      <div className={styles.detailContainer}>
+        <div className={styles.detailContent}>
+          <p>레시피를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 레시피가 없는 경우
+  if (!recipe) {
+    return (
+      <div className={styles.detailContainer}>
+        <div className={styles.detailContent}>
+          <p>레시피를 찾을 수 없습니다.</p>
+          <button
+            className={styles.backButton}
+            onClick={() => window.history.back()}
+          >
+            목록으로
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.detailContainer}>
       <div className={styles.detailContent}>
@@ -142,47 +179,56 @@ export default function RecipeDetailPage() {
             </button>
           </div>
           <div className={styles.authorInfo}>
-            <span className={styles.author}>{recipe.author}</span>
-            <span className={styles.date}>{recipe.createdAt}</span>
+            <span className={styles.author}>{recipe.userNickname}</span>
+            <span className={styles.date}>{formatDate(recipe.createdAt)}</span>
             <div className={styles.authorAvatar}>👨‍🍳</div>
           </div>
         </header>
 
         {/* 레시피 이미지 */}
         <div className={styles.imageSection}>
-          <Image
-            src={recipe.imageUrl}
-            alt={recipe.title}
-            width={600}
-            height={400}
-            className={styles.recipeImage}
-          />
+          {recipe.imageUrl ? (
+            <img
+              src={recipe.imageUrl}
+              alt={recipe.title}
+              className={styles.recipeImage}
+            />
+          ) : (
+            <Image
+              src="/images/default-recipe.jpg"
+              alt={recipe.title}
+              width={600}
+              height={400}
+              className={styles.recipeImage}
+            />
+          )}
         </div>
 
         {/* 재료 정보 */}
         <div className={styles.ingredientsSection}>
           <div className={styles.ingredientColumn}>
             <h3 className={styles.ingredientTitle}>[재료]</h3>
-            {recipe.mainIngredients.map((ingredient, index) => (
+            {recipe.mainIngredients?.map((ingredient, index) => (
               <div key={index} className={styles.ingredientItem}>
-                <span className={styles.ingredientName}>{ingredient.name}</span>
-                <span className={styles.ingredientAmount}>
-                  {ingredient.amount}
-                </span>
+                <span className={styles.ingredientName}>{ingredient}</span>
               </div>
             ))}
+            {(!recipe.mainIngredients ||
+              recipe.mainIngredients.length === 0) && (
+              <p className={styles.noIngredients}>등록된 재료가 없습니다.</p>
+            )}
           </div>
 
           <div className={styles.ingredientColumn}>
             <h3 className={styles.ingredientTitle}>[양념]</h3>
-            {recipe.seasonings.map((seasoning, index) => (
+            {recipe.seasonings?.map((seasoning, index) => (
               <div key={index} className={styles.ingredientItem}>
-                <span className={styles.ingredientName}>{seasoning.name}</span>
-                <span className={styles.ingredientAmount}>
-                  {seasoning.amount}
-                </span>
+                <span className={styles.ingredientName}>{seasoning}</span>
               </div>
             ))}
+            {(!recipe.seasonings || recipe.seasonings.length === 0) && (
+              <p className={styles.noIngredients}>등록된 양념이 없습니다.</p>
+            )}
           </div>
         </div>
 
@@ -199,7 +245,7 @@ export default function RecipeDetailPage() {
 
         {/* 태그 */}
         <div className={styles.tagsSection}>
-          {recipe.tags.map((tag, index) => (
+          {recipe.tags?.map((tag, index) => (
             <span key={index} className={styles.tag}>
               #{tag}
             </span>
@@ -221,9 +267,9 @@ export default function RecipeDetailPage() {
           {/* 평점 표시 */}
           <div className={styles.ratingHeader}>
             <span className={styles.averageRating}>
-              평점 {recipe.averageRating}
+              평점 {recipe.rating || 0}
             </span>
-            {renderStars(recipe.averageRating)}
+            {renderStars(recipe.rating || 0)}
           </div>
 
           {/* 기존 댓글 목록 */}

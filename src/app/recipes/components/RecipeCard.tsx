@@ -66,7 +66,11 @@ export default function RecipeCard({
               <button
                 key={index}
                 className={styles.hashtag}
-                onClick={() => onHashtagClick(hashtag)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onHashtagClick(hashtag);
+                }}
               >
                 {hashtag}
               </button>
