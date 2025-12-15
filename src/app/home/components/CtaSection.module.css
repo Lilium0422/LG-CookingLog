@@ -1,0 +1,23 @@
+.cta {
+  margin-top: 120px;
+  padding-top: 40px;
+  padding-bottom: 15px;
+  background: rgba(253, 217, 212, 0.3); /* #FDD9D4 30% */
+  text-align: center;
+}
+
+.text {
+  font-size: 25px;
+  font-weight: 500; /* medium */
+  color: #000;
+}
+
+.highlight {
+  color: #f36e5c;
+  font-weight: 700; /* bold */
+}
+
+.iconWrapper {
+  display: flex;
+  justify-content: center;
+}
