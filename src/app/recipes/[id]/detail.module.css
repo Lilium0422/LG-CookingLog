@@ -1,0 +1,396 @@
+.detailContainer {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.detailContent {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 레시피 헤더 */
+.recipeHeader {
+    margin-bottom: 30px;
+}
+
+.titleSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.recipeTitle {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    flex: 1;
+}
+
+.likeButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 5px;
+}
+
+.likeButton.liked {
+    color: #ff6b35;
+}
+
+.authorInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.author {
+    font-weight: 500;
+}
+
+.date {
+    color: #999;
+}
+
+.authorAvatar {
+    font-size: 20px;
+    margin-left: auto;
+}
+
+/* 이미지 섹션 */
+.imageSection {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.recipeImage {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 재료 섹션 */
+.ingredientsSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+}
+
+.ingredientColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ingredientTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 15px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ff6b35;
+}
+
+.ingredientItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.ingredientItem:last-child {
+    border-bottom: none;
+}
+
+.ingredientName {
+    font-size: 14px;
+    color: #333;
+}
+
+.ingredientAmount {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+/* 내용 섹션 */
+.contentSection {
+    margin-bottom: 30px;
+}
+
+.recipeContent {
+    line-height: 1.8;
+    color: #333;
+}
+
+.contentLine {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+}
+
+/* 태그 섹션 */
+.tagsSection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+}
+
+.tag {
+    background-color: #ff6b35;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* 액션 섹션 */
+.actionSection {
+    text-align: center;
+    margin-bottom: 50px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.backButton {
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.backButton:hover {
+    background-color: #e55a2b;
+    transform: translateY(-2px);
+}
+
+/* 댓글 섹션 */
+.commentsSection {
+    margin-top: 40px;
+}
+
+.ratingHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.averageRating {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 별점 */
+.stars {
+    display: flex;
+    gap: 2px;
+}
+
+.star {
+    font-size: 18px;
+    color: #ddd;
+    transition: color 0.2s ease;
+}
+
+.star.filled {
+    color: #ff6b35;
+}
+
+.star.interactive {
+    cursor: pointer;
+}
+
+.star.interactive:hover {
+    color: #ff6b35;
+}
+
+/* 댓글 목록 */
+.commentsList {
+    margin-bottom: 30px;
+}
+
+.commentItem {
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.commentItem:last-child {
+    border-bottom: none;
+}
+
+.commentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.commentAuthor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.commentAvatar {
+    font-size: 16px;
+}
+
+.commentAuthorName {
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+.commentActions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.commentDate {
+    font-size: 12px;
+    color: #999;
+    cursor: pointer;
+}
+
+.commentDate:hover {
+    color: #666;
+}
+
+.commentLike {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.commentLike:hover {
+    color: #ff6b35;
+}
+
+.commentContent {
+    margin: 0;
+    line-height: 1.6;
+    color: #333;
+    font-size: 14px;
+}
+
+/* 댓글 작성 폼 */
+.commentForm {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.ratingInput {
+    margin-bottom: 15px;
+}
+
+.commentTextarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 15px;
+}
+
+.commentTextarea:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.commentTextarea::placeholder {
+    color: #999;
+}
+
+.commentSubmit {
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    float: right;
+}
+
+.commentSubmit:hover {
+    background-color: #e55a2b;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .detailContainer {
+        padding: 10px;
+    }
+
+    .detailContent {
+        padding: 20px;
+    }
+
+    .recipeTitle {
+        font-size: 24px;
+    }
+
+    .ingredientsSection {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .titleSection {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .likeButton {
+        align-self: flex-end;
+    }
+
+    .commentHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .commentActions {
+        align-self: flex-end;
+    }
+}

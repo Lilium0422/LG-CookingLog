@@ -1,0 +1,21 @@
+.section {
+  padding: 60px 60px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f36e5c;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
