@@ -107,9 +107,11 @@ export default function Header() {
             </Link>
           ) : (
             <div className={styles.userArea}>
-              <img src="/icon/profile-icon.svg" className={styles.profileIcon} />
-              <span className={styles.username}>{nickname}님</span>
-
+              <Link href="/mypage" className={styles.profileWrapper}>
+                <img src="/icon/profile-icon.svg" className={styles.profileIcon} />
+                <span className={styles.username}>{nickname}님</span>
+              </Link>
+              
               <button className={styles.logoutBtn} onClick={handleLogout}>
                 로그아웃
               </button>

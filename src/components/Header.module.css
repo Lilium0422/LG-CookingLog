@@ -23,7 +23,7 @@
   justify-self: start;
 }
 .logo img {
-  width: 120px;
+  width: 110px;
 }
 
 /* NAV */
@@ -102,11 +102,19 @@
   gap: 12px;
 }
 
-.profileIcon {
-  width: 20px;
-  height: 20px;
+.profileWrapper {
+  cursor: pointer;
 }
 
+.profileIcon {
+  width: 15px;
+  height: 15px;
+}
+
+.username{
+  margin-left: 5px;
+  font-size: 15px;
+}
 
 .writeBtn {
   padding: 6px 16px;
