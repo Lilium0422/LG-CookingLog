@@ -16,29 +16,39 @@ export default function Header() {
   const isActive = (path: string) =>
     pathname === path ? styles.navActive : styles.navInactive;
 
-  /* 로그인 정보 로드 */
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      const user = JSON.parse(stored);
-      setIsLoggedIn(true);
-      setNickname(user.nickname);
-    }
-  }, []);
-
-  /* 로그인 변경(userUpdated) + storage 변경 감지해서 헤더 즉시 반영 */
+  /* 로그인 정보 로드 + 변경 감지 */
   useEffect(() => {
     const syncUser = () => {
       const stored = localStorage.getItem("user");
-      if (stored) {
-        const user = JSON.parse(stored);
-        setIsLoggedIn(true);
-        setNickname(user.nickname);
-      } else {
+
+      if (!stored) {
+        setIsLoggedIn(false);
+        setNickname(null);
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(stored);
+
+        const nickname =
+          parsed.nickname ??         
+          parsed.user?.nickname;   
+
+        if (nickname) {
+          setIsLoggedIn(true);
+          setNickname(nickname);
+        } else {
+          setIsLoggedIn(false);
+          setNickname(null);
+        }
+      } catch (error) {
+        console.error("유저 정보 파싱 실패:", error);
         setIsLoggedIn(false);
         setNickname(null);
       }
     };
+
+    syncUser(); // 최초 1회 실행
 
     window.addEventListener("storage", syncUser);
     window.addEventListener("userUpdated", syncUser);
@@ -49,7 +59,7 @@ export default function Header() {
     };
   }, []);
 
-  /* PC 화면으로 전환될 때 모바일 메뉴 자동 닫기 */
+  /* PC 화면 전환 시 모바일 메뉴 닫기 */
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
@@ -63,17 +73,13 @@ export default function Header() {
   /* 로그아웃 */
   const handleLogout = () => {
     localStorage.removeItem("user");
-
-    // 로그인 정보 변화 알림
     window.dispatchEvent(new Event("userUpdated"));
-
     router.push("/home");
   };
 
   return (
     <header className={styles.header}>
       <div className={styles.headerInner}>
-
         {/* 로고 */}
         <Link href="/home" className={styles.logo}>
           <img src="/logo.svg" alt="logo" />
@@ -86,7 +92,6 @@ export default function Header() {
 
           <div className={styles.navDropdownWrapper}>
             <Link href="/recipes" className={isActive("/recipes")}>레시피</Link>
-
             <div className={styles.dropdownMenu}>
               <Link href="/recipes">좋아요 한 레시피</Link>
             </div>
@@ -94,9 +99,11 @@ export default function Header() {
 
           <span className={styles.separator}>|</span>
 
-          <Link href="/calorie" className={isActive("/calorie")}>
-            칼로리 분석
-          </Link>
+          <Link href="/chat" className={isActive("/chat")}>쿠킹봇</Link>
+
+          <span className={styles.separator}>|</span>
+
+          <Link href="/event" className={isActive("/event")}>이벤트</Link>
         </nav>
 
         {/* RIGHT MENU */}
@@ -108,20 +115,31 @@ export default function Header() {
           ) : (
             <div className={styles.userArea}>
               <Link href="/mypage" className={styles.profileWrapper}>
-                <img src="/icon/profile-icon.svg" className={styles.profileIcon} />
-                <span className={styles.username}>{nickname}님</span>
+                <img
+                  src="/icon/profile-icon.svg"
+                  className={styles.profileIcon}
+                  alt="profile"
+                />
+                <span className={styles.username}>
+                  {nickname} 님
+                </span>
               </Link>
-              
-              <button className={styles.logoutBtn} onClick={handleLogout}>
+
+              <button
+                className={styles.logoutBtn}
+                onClick={handleLogout}
+              >
                 로그아웃
               </button>
 
-              <button className={styles.writeBtn}>글쓰기</button>
+              <button className={styles.writeBtn}>
+                글쓰기
+              </button>
             </div>
           )}
         </div>
 
-        {/* 햄버거 버튼 */}
+        {/* 햄버거 */}
         <button
           className={styles.hamburger}
           onClick={() => setOpen(!open)}
@@ -138,15 +156,23 @@ export default function Header() {
         <Link href="/calorie" onClick={() => setOpen(false)}>칼로리 분석</Link>
 
         {!isLoggedIn ? (
-          <Link href="/login" onClick={() => setOpen(false)}>로그인</Link>
+          <Link href="/login" onClick={() => setOpen(false)}>
+            로그인
+          </Link>
         ) : (
           <>
-            <Link href="/mypage" onClick={() => setOpen(false)}>마이페이지</Link>
-            <Link href="/mypage">글쓰기</Link>
-            <button className={styles.mobileLogout} onClick={handleLogout}>
+            <Link href="/mypage" onClick={() => setOpen(false)}>
+              마이페이지
+            </Link>
+            <Link href="/mypage" onClick={() => setOpen(false)}>
+              글쓰기
+            </Link>
+            <button
+              className={styles.mobileLogout}
+              onClick={handleLogout}
+            >
               로그아웃
             </button>
-
           </>
         )}
       </div>

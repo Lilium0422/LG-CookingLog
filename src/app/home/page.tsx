@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <main>
       {/* 메인 타이틀 */}
-      <section style={{ textAlign: "center", marginTop: "30px" }}>
+      <section style={{ textAlign: "center", marginTop: "45px" }}>
         <h1 style={{ fontSize: 27, fontWeight: 700 }}>
           당신의 레시피를 공유해보세요! <br />
           <span style={{ color: "#F36E5C" }}>쿠킹로그</span>와 함께해요
