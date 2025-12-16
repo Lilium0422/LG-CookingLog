@@ -8,7 +8,9 @@ export async function fetchProfile(): Promise<ProfileData> {
   };
 }
 
-export async function updateProfile(payload: UpdateProfilePayload) {
+export async function updateProfile(
+  payload: UpdateProfilePayload
+): Promise<ProfileData> {
   const formData = new FormData();
   formData.append('bio', payload.bio);
   formData.append('survey', JSON.stringify(payload.survey));
@@ -17,5 +19,14 @@ export async function updateProfile(payload: UpdateProfilePayload) {
     formData.append('image', payload.imageFile);
   }
 
-  // return fetch('/api/profile', { method: 'POST', body: formData });
+  const res = await fetch('/api/profile', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error('프로필 저장 실패');
+  }
+
+  return res.json();
 }
