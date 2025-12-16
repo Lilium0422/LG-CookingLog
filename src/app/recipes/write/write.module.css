@@ -404,3 +404,28 @@
         font-size: 14px;
     }
 }
+
+/* 취소 버튼 */
+.cancelBtn {
+    padding: 16px 48px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 16px;
+}
+
+.cancelBtn:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+.submitSection {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
