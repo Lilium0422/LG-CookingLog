@@ -20,12 +20,11 @@ const ProfileMainSection = () => {
     survey: {},
   });
 
-  // UI용 미리보기
   const [preview, setPreview] = useState(DEFAULT_IMAGE);
 
   /* ======================
      초기 데이터 로드
-  ======================= */
+  ====================== */
   useEffect(() => {
     fetchProfile().then(data => {
       setOriginal(data);
@@ -36,8 +35,10 @@ const ProfileMainSection = () => {
 
   /* ======================
      핸들러
-  ======================= */
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  ====================== */
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -76,7 +77,8 @@ const ProfileMainSection = () => {
       }
 
       alert('저장되었습니다');
-    } catch {
+    } catch (e) {
+      console.error(e);
       alert('저장에 실패했습니다');
     }
   };
@@ -94,7 +96,7 @@ const ProfileMainSection = () => {
 
   /* ======================
      렌더링
-  ======================= */
+  ====================== */
   return (
     <main className={css.container}>
       {/* 프로필 사진 */}

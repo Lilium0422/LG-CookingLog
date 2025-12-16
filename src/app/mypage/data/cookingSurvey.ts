@@ -18,7 +18,7 @@ export const COOKING_SURVEY: SurveyQuestion[] = [
     id: 'interest',
     question: '2. 관심 있는 요리 분야를 선택해 주세요. (중복 선택 가능)',
     type: 'multiple',
-    options: ['한식', '양식', '중식', '일식', '베이킹'],
+    options: ['한식', '양식', '중식', '일식', '분식', '디저트'],
   },
   {
     id: 'frequency',
@@ -28,7 +28,7 @@ export const COOKING_SURVEY: SurveyQuestion[] = [
   },
   {
     id: 'ingredient',
-    question: '4. 요리할 때 어떤 재료를 주로 사용하시나요?',
+    question: '4. 요리할 때 어떤 재료를 주로 사용하시나요? (중복 선택 가능)',
     type: 'multiple',
     options: [
       '소고기', '돼지고기', '닭고기', '채소', '해물', 
