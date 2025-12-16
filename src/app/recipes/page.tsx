@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./recipes.module.css";
 import RecipeCard from "./components/RecipeCard";
 import SearchBar from "./components/SearchBar";
@@ -213,6 +214,7 @@ export default function RecipesPage() {
   const [selectedHashtag, setSelectedHashtag] = useState("");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [animationKey, setAnimationKey] = useState(0); // 애니메이션 재트리거용
   const recipesPerPage = 9;
 
   // 백엔드에서 레시피 목록 가져오기
@@ -302,12 +304,14 @@ export default function RecipesPage() {
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     setCurrentPage(1); // 카테고리 변경시 첫 페이지로
+    setAnimationKey((prev) => prev + 1); // 애니메이션 재트리거
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     // 페이지 변경시 스크롤을 맨 위로
     window.scrollTo({ top: 0, behavior: "smooth" });
+    setAnimationKey((prev) => prev + 1); // 애니메이션 재트리거
   };
 
   // 검색이나 필터 변경시 첫 페이지로 리셋
@@ -315,6 +319,7 @@ export default function RecipesPage() {
     setSearchTerm(term);
     setSelectedHashtag(""); // 해시태그 필터 초기화
     setCurrentPage(1); // 첫 페이지로
+    setAnimationKey((prev) => prev + 1); // 애니메이션 재트리거
   };
 
   const handleHashtagClick = (hashtag: string) => {
@@ -322,6 +327,7 @@ export default function RecipesPage() {
     setSearchTerm(""); // 검색어 초기화
     setSearchInput(""); // 검색 입력창 초기화
     setCurrentPage(1); // 첫 페이지로
+    setAnimationKey((prev) => prev + 1); // 애니메이션 재트리거
   };
 
   return (
@@ -331,8 +337,16 @@ export default function RecipesPage() {
         {/* 페이지 헤더 */}
         <div className={styles.pageHeader}>
           <div className={styles.titleSection}>
-            <div className={styles.chefIcon}>👨‍🍳</div>
-            <h1 className={styles.pageTitle}>레시피 게시판</h1>
+            <h1 className={styles.pageTitle}>레시피 게시판　　</h1>
+            <div className={styles.chefIcon}>
+              <Image
+                src="/images/mascot1.JPG"
+                alt="마스코트"
+                width={150}
+                height={150}
+                className={styles.chefIconImage}
+              />
+            </div>
           </div>
 
           <SearchBar
@@ -381,15 +395,19 @@ export default function RecipesPage() {
         )}
 
         {/* 레시피 그리드 */}
-        <div className={styles.recipeGrid}>
-          {currentRecipes.map((recipe, index) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onHashtagClick={handleHashtagClick}
-              index={index}
-            />
-          ))}
+        <div className={styles.recipeGrid} key={animationKey}>
+          {currentRecipes.map((recipe, index) => {
+            // 한 줄에 3개씩 표시되므로, 줄 번호를 계산 (0, 0, 0, 1, 1, 1, 2, 2, 2, ...)
+            const rowIndex = Math.floor(index / 3);
+            return (
+              <RecipeCard
+                key={`${animationKey}-${recipe.id}`} // 애니메이션 키와 함께 고유 키 생성
+                recipe={recipe}
+                onHashtagClick={handleHashtagClick}
+                index={rowIndex} // 줄 번호를 전달
+              />
+            );
+          })}
         </div>
 
         {/* 검색 결과가 없을 때 */}
