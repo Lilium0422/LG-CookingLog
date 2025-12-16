@@ -25,5 +25,15 @@ data class User(
     
     @Column(nullable = false)
     @field:NotBlank(message = "비밀번호는 필수입니다")
-    val password: String
+    val password: String,
+    
+    // 마이페이지 추가 필드들
+    @Column(length = 150)
+    val bio: String? = null,
+    
+    @Column(columnDefinition = "TEXT")
+    val survey: String? = null, // JSON 형태로 저장
+    
+    @Column
+    val profileImageUrl: String? = null
 )

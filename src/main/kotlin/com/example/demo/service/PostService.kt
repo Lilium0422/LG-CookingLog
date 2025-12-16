@@ -5,6 +5,7 @@ import com.example.demo.dto.PostResponse
 import com.example.demo.dto.PostUpdateRequest
 import com.example.demo.entity.Post
 import com.example.demo.repository.PostRepository
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,14 +14,18 @@ import org.springframework.transaction.annotation.Transactional
 class PostService(
     private val postRepository: PostRepository
 ) {
+    private val objectMapper = jacksonObjectMapper()
     
     fun createPost(request: PostCreateRequest): PostResponse {
         val post = Post(
             title = request.title,
-            subtitle = request.subtitle,
+            category = request.category,
+            content = request.content,
             imageUrl = request.imageUrl,
+            mainIngredients = objectMapper.writeValueAsString(request.mainIngredients),
+            seasonings = objectMapper.writeValueAsString(request.seasonings),
+            tags = objectMapper.writeValueAsString(request.tags),
             rating = request.rating,
-            tags = request.tags,
             userNickname = request.userNickname
         )
         
@@ -61,7 +66,7 @@ class PostService(
     
     @Transactional(readOnly = true)
     fun searchPosts(keyword: String): List<PostResponse> {
-        return postRepository.findByTitleOrSubtitleContaining(keyword)
+        return postRepository.findByTitleOrContentContaining(keyword)
             .map { convertToResponse(it) }
     }
     
@@ -77,10 +82,13 @@ class PostService(
         
         val updatedPost = existingPost.copy(
             title = request.title ?: existingPost.title,
-            subtitle = request.subtitle ?: existingPost.subtitle,
+            category = request.category ?: existingPost.category,
+            content = request.content ?: existingPost.content,
             imageUrl = request.imageUrl ?: existingPost.imageUrl,
-            rating = request.rating ?: existingPost.rating,
-            tags = request.tags ?: existingPost.tags
+            mainIngredients = request.mainIngredients?.let { objectMapper.writeValueAsString(it) } ?: existingPost.mainIngredients,
+            seasonings = request.seasonings?.let { objectMapper.writeValueAsString(it) } ?: existingPost.seasonings,
+            tags = request.tags?.let { objectMapper.writeValueAsString(it) } ?: existingPost.tags,
+            rating = request.rating ?: existingPost.rating
         )
         
         val savedPost = postRepository.save(updatedPost)
@@ -98,10 +106,13 @@ class PostService(
         return PostResponse(
             id = post.id,
             title = post.title,
-            subtitle = post.subtitle,
+            category = post.category,
+            content = post.content,
             imageUrl = post.imageUrl,
+            mainIngredients = objectMapper.readValue(post.mainIngredients, List::class.java) as List<String>,
+            seasonings = objectMapper.readValue(post.seasonings, List::class.java) as List<String>,
+            tags = objectMapper.readValue(post.tags, List::class.java) as List<String>,
             rating = post.rating,
-            tags = post.tags,
             userNickname = post.userNickname,
             createdAt = post.createdAt,
             updatedAt = post.updatedAt

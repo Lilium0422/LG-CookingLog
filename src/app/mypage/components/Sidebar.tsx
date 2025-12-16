@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import css from '../css/Sidebar.module.css';
 
 const Sidebar = () => {

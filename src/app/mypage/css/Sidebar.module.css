@@ -1,5 +1,5 @@
 .sidebar_con {
-  width: 400px;
+  min-width: 300px;
   background-color: #FDD9D4;
 }
 
@@ -8,6 +8,7 @@
   flex-direction: column;
   align-content: center;
   justify-content: center;
+  margin-bottom: 100px;
 }
 
 .profile {
@@ -15,7 +16,7 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  margin-top: 200px;
+  margin-top: 150px;
 }
 
 .profileImage {
