@@ -394,3 +394,82 @@
         align-self: flex-end;
     }
 }
+
+/* 액션 버튼 섹션 */
+.actionSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
+}
+
+.backButton {
+    padding: 12px 24px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.backButton:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+.ownerActions {
+    display: flex;
+    gap: 12px;
+}
+
+.editButton {
+    padding: 12px 24px;
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.editButton:hover {
+    background-color: #e55a2b;
+    transform: translateY(-1px);
+}
+
+.deleteButton {
+    padding: 12px 24px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .actionSection {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .ownerActions {
+        justify-content: center;
+    }
+}

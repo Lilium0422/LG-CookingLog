@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import styles from "./detail.module.css";
 
@@ -35,10 +35,12 @@ const formatDate = (dateString: string) => {
 
 export default function RecipeDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const recipeId = params.id;
 
   const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<string>("");
   const [comments, setComments] = useState<
     {
       id: number;
@@ -52,6 +54,16 @@ export default function RecipeDetailPage() {
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+
+  // 현재 로그인한 사용자 정보 가져오기
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const data = JSON.parse(userData);
+      const nickname = data.user?.nickname || data.nickname || "";
+      setCurrentUser(nickname);
+    }
+  }, []);
 
   // 백엔드에서 레시피 상세 정보 가져오기
   useEffect(() => {
@@ -80,6 +92,47 @@ export default function RecipeDetailPage() {
       fetchRecipeDetail();
     }
   }, [recipeId]);
+
+  // 본인 글인지 확인
+  const isOwner = recipe && currentUser && recipe.userNickname === currentUser;
+
+  // 글 수정
+  const handleEdit = () => {
+    router.push(`/recipes/${recipeId}/edit`);
+  };
+
+  // 글 삭제
+  const handleDelete = async () => {
+    if (!window.confirm("정말로 이 레시피를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      const userData = localStorage.getItem("user");
+      const token = userData ? JSON.parse(userData).token : "";
+
+      const response = await fetch(
+        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/${recipeId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("레시피가 삭제되었습니다.");
+        router.push("/recipes");
+      } else {
+        throw new Error("삭제에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("레시피 삭제 실패:", error);
+      alert("레시피 삭제 중 오류가 발생했습니다.");
+    }
+  };
 
   // 별점 렌더링 함수
   const renderStars = (
@@ -252,7 +305,7 @@ export default function RecipeDetailPage() {
           ))}
         </div>
 
-        {/* 목록으로 버튼 */}
+        {/* 액션 버튼들 */}
         <div className={styles.actionSection}>
           <button
             className={styles.backButton}
@@ -260,6 +313,18 @@ export default function RecipeDetailPage() {
           >
             목록으로
           </button>
+
+          {/* 본인 글인 경우에만 수정/삭제 버튼 표시 */}
+          {isOwner && (
+            <div className={styles.ownerActions}>
+              <button className={styles.editButton} onClick={handleEdit}>
+                수정
+              </button>
+              <button className={styles.deleteButton} onClick={handleDelete}>
+                삭제
+              </button>
+            </div>
+          )}
         </div>
 
         {/* 댓글 섹션 */}
