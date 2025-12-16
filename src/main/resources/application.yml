@@ -18,6 +18,13 @@ spring:
     user:
       name: admin
       password: admin
+  
+  # 파일 업로드 설정
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
 
 server:
   port: 8080

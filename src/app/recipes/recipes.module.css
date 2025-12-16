@@ -73,6 +73,36 @@
     border-color: #ff6b35;
 }
 
+.pageButton.disabled {
+    background-color: #f5f5f5;
+    color: #ccc;
+    border-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+.pageButton.disabled:hover {
+    background-color: #f5f5f5;
+    transform: none;
+}
+
+.noResults {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.noResults p {
+    font-size: 18px;
+    margin: 0;
+}
+
+.pageInfo {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
 .filterStatus {
     display: flex;
     gap: 8px;

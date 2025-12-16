@@ -23,8 +23,10 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { authz ->
                 authz
+                    .requestMatchers("/").permitAll() // 루트 경로 허용
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/users").permitAll() // 회원가입 허용
+                    .requestMatchers("/api/posts/**").permitAll() // 게시글 관련 허용
                     .anyRequest().authenticated()
             }
         
