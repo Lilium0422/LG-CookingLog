@@ -16,7 +16,7 @@ export default function Footer() {
         
         {/* Left */}
         <div className={styles.left}>
-          <p className={styles.brand}>© 2024 CookingLog</p>
+          <p className={styles.brand}>© 2025 CookingLog</p>
           <p className={styles.desc}>
             CookingLog는 레시피를 공유하고 탐색하며,
             함께 요리 경험을 나누는 커뮤니티 플랫폼입니다.  

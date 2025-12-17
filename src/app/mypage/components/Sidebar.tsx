@@ -45,7 +45,7 @@ const Sidebar = () => {
     return () => window.removeEventListener('profileUpdated', handler);
   }, []);
 
-  if (!profile) return null;
+  // if (!profile) return null; 임시로 
 
   /* ======================
      로그아웃
