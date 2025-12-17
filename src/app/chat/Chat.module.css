@@ -1,7 +1,8 @@
 .page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;       
+  height: 100vh;
+  overflow: hidden;
   background: #ffffff;
 }
 
@@ -56,10 +57,12 @@
 /* 채팅 영역*/
 .chatArea {
   flex: 1;
-  padding: 20px 28px;       /* ⭐ 여유공간 줄임 */
+  padding: 20px 28px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .botBubble ol {
@@ -227,9 +230,250 @@
   text-align: center;
 }
 
+/* 첨부 파일 표시 스타일 */
+.attached {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0f0f0;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.attached button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #999;
+  padding: 0;
+  width: auto;
+  height: auto;
+}
+
+.attached button:hover {
+  color: #666;
+}
+
 /* 반응형 */
+@media (max-width: 1024px) {
+  .topSection {
+    padding: 10px 20px;
+  }
+
+  .botInfo img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .subTitle {
+    font-size: 13px;
+  }
+
+  .chatArea {
+    padding: 18px 24px;
+  }
+
+  .inputSection {
+    padding: 10px 20px 14px;
+  }
+
+  .inputBox {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
+  .topSection {
+    padding: 8px 16px;
+  }
+
+  .botInfo {
+    gap: 8px;
+  }
+
+  .botInfo img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .subTitle {
+    font-size: 12px;
+  }
+
+  .newChatBtn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
   .chatArea {
     padding: 16px 18px;
+  }
+
+  .userBubble,
+  .botBubble {
+    max-width: 75%;
+    font-size: 13px;
+    padding: 9px 12px;
+  }
+
+  .userBubble {
+    margin-right: 8px;
+  }
+
+  .botBubble {
+    margin-left: 8px;
+  }
+
+  .emptyState p {
+    font-size: 18px;
+  }
+
+  .quickButtons button {
+    font-size: 12px;
+    padding: 7px 12px;
+  }
+
+  .inputSection {
+    padding: 8px 16px 12px;
+  }
+
+  .inputBox {
+    padding: 8px 12px;
+  }
+
+  .inputBox input[type="text"] {
+    font-size: 13px;
+  }
+
+  .plusBtn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .plusBtn img {
+    width: 12px;
+    height: 12px;
+  }
+
+  .inputBox button img {
+    width: 26px;
+    height: 26px;
+  }
+
+  .notice {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topSection {
+    padding: 6px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .botInfo {
+    gap: 6px;
+  }
+
+  .botInfo img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .subTitle {
+    font-size: 11px;
+  }
+
+  .newChatBtn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .chatArea {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .userBubble,
+  .botBubble {
+    max-width: 80%;
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .userBubble {
+    margin-right: 6px;
+  }
+
+  .botBubble {
+    margin-left: 6px;
+  }
+
+  .emptyState p {
+    font-size: 16px;
+    padding: 0 10px;
+  }
+
+  .quickButtons {
+    margin-top: 16px;
+    gap: 8px;
+  }
+
+  .quickButtons button {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .inputSection {
+    padding: 6px 12px 10px;
+  }
+
+  .inputBox {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .inputBox input[type="text"] {
+    font-size: 12px;
+  }
+
+  .plusBtn {
+    width: 26px;
+    height: 26px;
+  }
+
+  .plusBtn img {
+    width: 11px;
+    height: 11px;
+  }
+
+  .inputBox button img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .attached {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .notice {
+    font-size: 9px;
+    margin-top: 4px;
   }
 }
