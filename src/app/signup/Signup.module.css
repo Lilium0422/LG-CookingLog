@@ -75,17 +75,32 @@
 .checkButton {
   width: 110px;
   height: 54px;
-  background-color: rgba(243, 110, 92, 0.6); /* 60% 투명도 */
-  color: white;
+  background-color: #e0e0e0;
+  color: #666;
   font-size: 15px;
   font-weight: 700;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkButton:hover:not(:disabled) {
+  background-color: #d0d0d0;
+}
+
+.checkButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .checked {
-  background-color: #f36e5c; /* 100% */
+  background-color: #f36e5c;
+  color: white;
+}
+
+.checked:hover {
+  background-color: #e55a2b;
 }
 
 /* 회원가입 버튼 */
@@ -104,6 +119,35 @@
 
 .signupButton:hover {
   opacity: 0.9;
+}
+
+/* 에러 메시지 */
+.errorMessage {
+  font-size: 12px;
+  color: #ff4444;
+  margin-top: 6px;
+  margin-left: 4px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* 성공 메시지 */
+.successMessage {
+  font-size: 12px;
+  color: #22c55e;
+  margin-top: 6px;
+  margin-left: 4px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 반응형 */
@@ -148,6 +192,12 @@
   .signupButton {
     height: 50px;
     font-size: 18px;
+  }
+
+  .errorMessage,
+  .successMessage {
+    font-size: 11px;
+    margin-top: 5px;
   }
 }
 
@@ -205,5 +255,11 @@
     height: 48px;
     font-size: 17px;
     margin-top: 8px;
+  }
+
+  .errorMessage,
+  .successMessage {
+    font-size: 10px;
+    margin-top: 4px;
   }
 }

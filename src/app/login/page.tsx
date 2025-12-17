@@ -82,9 +82,11 @@ export default function LoginPage() {
   const handlePopupClose = () => {
     setPopupMessage(null);
 
+    // 로그인 성공 시에만 홈으로 이동
     if (loginSuccess) {
       router.push("/home");
     }
+    // 실패 시에는 현재 페이지 유지
   };
 
   return (
