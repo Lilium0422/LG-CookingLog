@@ -15,18 +15,18 @@ export default function HomePage() {
 
       <Hero />
 
-      {/* 추천 레시피 */}
+      {/* 최신 레시피 */}
       <RecipeSection
         label="요리 초보라면? 이것부터 보세요!"
-        title="추천 레시피 보기"
-        type="popular"
+        title="최신 레시피 보기"
+        type="recent"
       />
 
       {/* 인기 레시피 */}
       <RecipeSection
         label="과연 이번주 인기레시피는?"
         title="인기 레시피 보기"
-        type="recommend"
+        type="popular"
       />
       
       <HomeCtaSection />

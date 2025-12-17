@@ -2,22 +2,109 @@
   margin-top: 120px;
   padding-top: 40px;
   padding-bottom: 15px;
-  background: rgba(253, 217, 212, 0.3); /* #FDD9D4 30% */
+  background: rgba(253, 217, 212, 0.3);
   text-align: center;
 }
 
 .text {
   font-size: 25px;
-  font-weight: 500; /* medium */
+  font-weight: 500;
   color: #000;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .highlight {
   color: #f36e5c;
-  font-weight: 700; /* bold */
+  font-weight: 700;
+  display: inline-block;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(243, 110, 92, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(243, 110, 92, 0.6),
+                 0 0 25px rgba(243, 110, 92, 0.4);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .iconWrapper {
   display: flex;
   justify-content: center;
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.iconWrapper img {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .cta {
+    margin-top: 100px;
+    padding-top: 35px;
+  }
+
+  .text {
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cta {
+    margin-top: 80px;
+    padding-top: 30px;
+    padding-bottom: 12px;
+  }
+
+  .text {
+    font-size: 20px;
+    padding: 0 20px;
+  }
+
+  .iconWrapper img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta {
+    margin-top: 60px;
+    padding-top: 25px;
+    padding-bottom: 10px;
+  }
+
+  .text {
+    font-size: 18px;
+    padding: 0 16px;
+    line-height: 1.5;
+  }
+
+  .iconWrapper img {
+    width: 70px;
+    height: 70px;
+  }
 }
