@@ -1,0 +1,91 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 50px;
+  margin-bottom: 100px;
+  gap: 30px;
+}
+
+.container button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+}
+
+.modalForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 30px;
+}
+
+.modalText h3 {
+  font-size: 24px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.modalButtons button {
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.deleteBtnSmall {
+  background-color: #B6B6B6;
+}
+
+.cancelBtn {
+  background-color: #F36E5C;
+}
+
+.deleteBtnSmall:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.cancelBtn:hover {
+  background-color: #FF6060;
+}
+
+.successWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 전체 수직 중앙 */
+  padding: 40px 0;
+  gap: 30px; /* 텍스트와 버튼 사이 거리 */
+}
+
+.successModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 50px;
+}
+
+.okBtn {
+  padding: 10px 20px;
+  background-color: #F36E5C;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 150px;
+  text-align: center;
+}
+
+.okBtn:hover {
+  background-color: #FF6060;
+  transition: background-color 0.2s ease;
+}
