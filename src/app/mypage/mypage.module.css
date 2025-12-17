@@ -1,9 +1,13 @@
 .container {
   display: flex;
+  width: 100vw;
   min-height: 100vh;
   background-color: #fafafa;
 }
 
+.main {
+  margin-bottom: 50px;
+}
 
 @media (max-width: 768px) {
   .container {
