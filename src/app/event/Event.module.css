@@ -1,0 +1,217 @@
+.eventContainer {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 40px;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.titleSection {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.eventIcon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.pageTitle {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.tabButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.tabButton {
+  padding: 8px 20px;
+  border: none;
+  background-color: white;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabButton:hover {
+  background-color: #f5f5f5;
+}
+
+.tabButton.active {
+  background-color: #333;
+  color: white;
+}
+
+.eventGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+
+.pageButton {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.pageButton:hover {
+  background-color: #f5f5f5;
+}
+
+.pageButton.active {
+  background-color: #ff6b35;
+  color: white;
+  border-color: #ff6b35;
+}
+
+.pageButton.disabled {
+  background-color: #f5f5f5;
+  color: #ccc;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.pageButton.disabled:hover {
+  background-color: #f5f5f5;
+  transform: none;
+}
+
+.noResults {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.noResults p {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .mainContent {
+    padding: 20px 30px;
+  }
+
+  .eventGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 15px 20px;
+  }
+
+  .pageHeader {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .titleSection {
+    gap: 10px;
+  }
+
+  .eventIcon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .pageTitle {
+    font-size: 28px;
+  }
+
+  .eventGrid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .tabButtons {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .tabButton {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+
+  .pagination {
+    gap: 6px;
+  }
+
+  .pageButton {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 10px 15px;
+  }
+
+  .pageTitle {
+    font-size: 24px;
+  }
+
+  .eventIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .eventGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tabButton {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .pageButton {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+}

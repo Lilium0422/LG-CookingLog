@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.vscode/settings.json
+
+lg-cookinglog-9368883f4093.json

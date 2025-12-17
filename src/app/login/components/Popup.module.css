@@ -1,0 +1,66 @@
+/* 팝업 전체 배경 (반투명) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+}
+
+/* 팝업 박스 */
+.popup {
+  background: white;
+  width: 320px;
+  padding: 24px 20px;
+
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+
+  text-align: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* 팝업 텍스트 */
+.text {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+/* 확인 버튼 */
+.button {
+  width: 20%;
+  height: 30px;
+  background-color: #f36e5c;
+  color: white;
+
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+/* 부드러운 등장 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
