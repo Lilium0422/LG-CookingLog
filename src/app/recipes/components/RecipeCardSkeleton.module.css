@@ -1,0 +1,156 @@
+/* 스켈레톤 기본 애니메이션 */
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+/* 스켈레톤 카드 페이드인 애니메이션 */
+@keyframes skeletonFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.skeletonCard {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: skeletonFadeIn 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+/* 공통 스켈레톤 스타일*/
+.skeletonCard>*,
+.skeletonContent>*,
+.skeletonInfo>*,
+.skeletonHashtags>*,
+.skeletonAuthor>*,
+.skeletonDescription>* {
+    background: linear-gradient(90deg, #f8f8f8 25%, #f0f0f0 50%, #f8f8f8 75%);
+    background-size: 400px 100%;
+    animation: shimmer 3s infinite ease-in-out;
+    border-radius: 4px;
+}
+
+/* 이미지 스켈레톤 */
+.skeletonImage {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(90deg, #f8f8f8 25%, #f0f0f0 50%, #f8f8f8 75%);
+    background-size: 400px 100%;
+    animation: shimmer 3s infinite ease-in-out;
+}
+
+/* 콘텐츠 영역 */
+.skeletonContent {
+    padding: 20px;
+}
+
+/* 제목 스켈레톤 */
+.skeletonTitle {
+    height: 22px;
+    width: 80%;
+    margin-bottom: 12px;
+}
+
+/* 설명 스켈레톤 */
+.skeletonDescription {
+    margin-bottom: 16px;
+}
+
+.skeletonLine {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.skeletonLineShort {
+    height: 16px;
+    width: 70%;
+}
+
+/* 별점과 카테고리 */
+.skeletonInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.skeletonRating {
+    height: 16px;
+    width: 80px;
+}
+
+.skeletonCategory {
+    height: 20px;
+    width: 60px;
+    border-radius: 12px;
+}
+
+/* 해시태그들 */
+.skeletonHashtags {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.skeletonHashtag {
+    height: 24px;
+    width: 60px;
+    border-radius: 12px;
+}
+
+.skeletonHashtagShort {
+    height: 24px;
+    width: 45px;
+    border-radius: 12px;
+}
+
+/* 작성자 정보 */
+.skeletonAuthor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.skeletonDate {
+    height: 12px;
+    width: 60px;
+}
+
+.skeletonAuthorName {
+    height: 12px;
+    width: 80px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .skeletonContent {
+        padding: 16px;
+    }
+
+    .skeletonTitle {
+        height: 20px;
+    }
+
+    .skeletonLine,
+    .skeletonLineShort {
+        height: 14px;
+    }
+}

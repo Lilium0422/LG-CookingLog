@@ -1,4 +1,5 @@
 .recipesContainer {
+    margin-top: 30px;
     min-height: 100vh;
     background-color: #f8f9fa;
 }
@@ -23,7 +24,17 @@
 }
 
 .chefIcon {
-    font-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: #f8f9fa;
+    /* 페이지 배경색과 동일하게 */
+}
+
+.chefIconImage {
+    object-fit: cover;
 }
 
 .pageTitle {
