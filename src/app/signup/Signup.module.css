@@ -139,6 +139,26 @@
   animation: fadeIn 0.3s ease-in;
 }
 
+/* 유효성 검사 메시지 */
+.validationMessages {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  margin-left: 4px;
+}
+
+.validationSuccess {
+  font-size: 11px;
+  color: #22c55e;
+  transition: color 0.2s ease;
+}
+
+.validationError {
+  font-size: 11px;
+  color: #999;
+  transition: color 0.2s ease;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -198,6 +218,15 @@
   .successMessage {
     font-size: 11px;
     margin-top: 5px;
+  }
+
+  .validationMessages {
+    gap: 10px;
+  }
+
+  .validationSuccess,
+  .validationError {
+    font-size: 10px;
   }
 }
 
@@ -261,5 +290,14 @@
   .successMessage {
     font-size: 10px;
     margin-top: 4px;
+  }
+
+  .validationMessages {
+    gap: 8px;
+  }
+
+  .validationSuccess,
+  .validationError {
+    font-size: 9px;
   }
 }
