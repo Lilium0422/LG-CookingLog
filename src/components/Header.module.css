@@ -11,11 +11,10 @@
 .headerInner {
   width: 100%;
   padding: 0 20px;
-
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
+  gap: 20px;
 }
 
 /* 로고 */
@@ -26,7 +25,7 @@
   width: 120px;
 }
 
-/* NAV */
+/* NAV - 항상 정중앙 */
 .pcNav {
   display: flex;
   align-items: center;
