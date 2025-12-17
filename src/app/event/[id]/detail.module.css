@@ -1,0 +1,249 @@
+.detailContainer {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.detailContent {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 이벤트 헤더 */
+.eventHeader {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.eventTitle {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 15px 0;
+}
+
+.eventMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+}
+
+.statusBadge.ongoing {
+  background-color: #f36e5c;
+}
+
+.statusBadge.ended {
+  background-color: #acacac;
+}
+
+.eventDate {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 이미지 섹션 */
+.imageSection {
+  margin-bottom: 30px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.eventImage {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+/* 설명 섹션 */
+.descriptionSection {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #fff8f5;
+  border-left: 4px solid #ff6b35;
+  border-radius: 8px;
+}
+
+.description {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* 내용 섹션 */
+.contentSection {
+  margin-bottom: 40px;
+}
+
+.eventContent {
+  line-height: 1.8;
+  color: #333;
+}
+
+.contentLine {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+}
+
+.contentLine:empty {
+  margin: 0 0 20px 0;
+}
+
+/* 액션 섹션 */
+.actionSection {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.backButton {
+  background-color: #ff6b35;
+  color: white;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: #e55a2b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .detailContent {
+    padding: 30px;
+  }
+
+  .eventTitle {
+    font-size: 26px;
+  }
+
+  .eventImage {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .detailContainer {
+    padding: 10px;
+  }
+
+  .detailContent {
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .eventTitle {
+    font-size: 22px;
+  }
+
+  .eventMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .eventImage {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .contentLine {
+    font-size: 14px;
+  }
+
+  .descriptionSection {
+    padding: 15px;
+  }
+
+  .backButton {
+    padding: 10px 30px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detailContainer {
+    padding: 5px;
+  }
+
+  .detailContent {
+    padding: 15px;
+  }
+
+  .eventHeader {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+  }
+
+  .eventTitle {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .statusBadge {
+    font-size: 12px;
+    padding: 5px 14px;
+  }
+
+  .eventDate {
+    font-size: 13px;
+  }
+
+  .imageSection {
+    margin-bottom: 20px;
+  }
+
+  .descriptionSection {
+    padding: 12px;
+    margin-bottom: 20px;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  .contentLine {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .actionSection {
+    padding-top: 20px;
+  }
+
+  .backButton {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+}

@@ -2,14 +2,24 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import styles from "./HeroSlider.module.css";
 
 export default function HeroSlider() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (paused) return;
+    // 초기 로딩 시뮬레이션
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (paused || loading) return;
 
     const slider = sliderRef.current;
     if (!slider) return;
@@ -24,10 +34,18 @@ export default function HeroSlider() {
       ) {
         slider.scrollLeft = 0;
       }
-    }, 18); 
+    }, 18);
 
     return () => clearInterval(interval);
-  }, [paused]);
+  }, [paused, loading]);
+
+  if (loading) {
+    return (
+      <div className={styles.wrapper}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrapper}>

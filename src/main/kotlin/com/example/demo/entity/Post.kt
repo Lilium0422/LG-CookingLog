@@ -19,19 +19,30 @@ data class Post(
     @field:NotBlank(message = "게시글 제목은 필수입니다")
     val title: String,
     
-    @Column(nullable = true)
-    val subtitle: String? = null,
+    @Column(nullable = false)
+    @field:NotBlank(message = "카테고리는 필수입니다")
+    val category: String,
+    
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @field:NotBlank(message = "내용은 필수입니다")
+    val content: String,
     
     @Column(nullable = true)
     val imageUrl: String? = null,
+    
+    @Column(nullable = false, columnDefinition = "TEXT")
+    val mainIngredients: String = "[]", // JSON 배열로 저장
+    
+    @Column(nullable = false, columnDefinition = "TEXT")
+    val seasonings: String = "[]", // JSON 배열로 저장
+    
+    @Column(nullable = false, columnDefinition = "TEXT")
+    val tags: String = "[]", // JSON 배열로 저장
     
     @Column(nullable = false)
     @field:Min(value = 1, message = "별점은 1점 이상이어야 합니다")
     @field:Max(value = 5, message = "별점은 5점 이하여야 합니다")
     val rating: Int,
-    
-    @Column(nullable = true)
-    val tags: String? = null, // JSON 형태로 저장하거나 쉼표로 구분
     
     @Column(nullable = false)
     @field:NotBlank(message = "사용자 닉네임은 필수입니다")

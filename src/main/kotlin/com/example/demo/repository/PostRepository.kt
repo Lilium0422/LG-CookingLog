@@ -15,8 +15,8 @@ interface PostRepository : JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.tags LIKE %:tag%")
     fun findByTagsContaining(tag: String): List<Post>
     
-    @Query("SELECT p FROM Post p WHERE p.title LIKE %:keyword% OR p.subtitle LIKE %:keyword%")
-    fun findByTitleOrSubtitleContaining(keyword: String): List<Post>
+    @Query("SELECT p FROM Post p WHERE p.title LIKE %:keyword% OR p.content LIKE %:keyword%")
+    fun findByTitleOrContentContaining(keyword: String): List<Post>
     
     fun findAllByOrderByCreatedAtDesc(): List<Post>
     

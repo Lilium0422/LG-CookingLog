@@ -2,11 +2,14 @@ package com.example.demo.controller
 
 import com.example.demo.dto.UserCreateRequest
 import com.example.demo.dto.UserResponse
+import com.example.demo.dto.UserUpdateRequest
+import com.example.demo.dto.UserProfileUpdateRequest
 import com.example.demo.service.UserService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/users")
@@ -48,6 +51,42 @@ class UserController(
             ResponseEntity.ok(user)
         } else {
             ResponseEntity.notFound().build()
+        }
+    }
+    
+    @PutMapping("/{id}")
+    fun updateUser(
+        @PathVariable id: Long,
+        @Valid @RequestBody request: UserUpdateRequest
+    ): ResponseEntity<Any> {
+        return try {
+            val response = userService.updateUser(id, request)
+            if (response != null) {
+                ResponseEntity.ok(response)
+            } else {
+                ResponseEntity.notFound().build()
+            }
+        } catch (e: RuntimeException) {
+            ResponseEntity.badRequest().body(mapOf("error" to e.message))
+        }
+    }
+    
+    @PutMapping("/{id}/profile")
+    fun updateUserProfile(
+        @PathVariable id: Long,
+        @RequestParam("bio") bio: String?,
+        @RequestParam("survey") survey: String?,
+        @RequestParam("imageFile") imageFile: MultipartFile?
+    ): ResponseEntity<Any> {
+        return try {
+            val response = userService.updateUserProfile(id, bio, survey, imageFile)
+            if (response != null) {
+                ResponseEntity.ok(response)
+            } else {
+                ResponseEntity.notFound().build()
+            }
+        } catch (e: RuntimeException) {
+            ResponseEntity.badRequest().body(mapOf("error" to e.message))
         }
     }
     
