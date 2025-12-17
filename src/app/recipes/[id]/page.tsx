@@ -86,6 +86,11 @@ export default function RecipeDetailPage() {
   const [replyingTo, setReplyingTo] = useState<number | null>(null); // 답글 달고 있는 댓글 ID
   const [replyContent, setReplyContent] = useState("");
 
+  // 댓글 수정 관련 상태
+  const [editingComment, setEditingComment] = useState<number | null>(null); // 수정 중인 댓글 ID
+  const [editContent, setEditContent] = useState("");
+  const [editRating, setEditRating] = useState(0);
+
   // 현재 로그인한 사용자 정보 가져오기
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -362,6 +367,113 @@ export default function RecipeDetailPage() {
     setReplyContent("");
   };
 
+  // 댓글 수정
+  const handleEditStart = (comment: Comment) => {
+    setEditingComment(comment.id);
+    setEditContent(comment.content);
+    setEditRating(comment.rating);
+  };
+
+  // 댓글 수정 취소
+  const handleEditCancel = () => {
+    setEditingComment(null);
+    setEditContent("");
+    setEditRating(0);
+  };
+
+  // 댓글 수정 완료
+  const handleEditSubmit = async (commentId: number) => {
+    if (!editContent.trim()) {
+      alert("댓글 내용을 입력해주세요.");
+      return;
+    }
+
+    if (!currentUser) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/${recipeId}/comments/${commentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "User-Nickname": currentUser,
+          },
+          body: JSON.stringify({
+            content: editContent,
+            rating: editRating,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        // 댓글 목록을 다시 가져와서 수정된 내용 반영
+        await fetchComments();
+        setEditingComment(null);
+        setEditContent("");
+        setEditRating(0);
+      } else {
+        const errorText = await response.text();
+        console.error(
+          "댓글 수정 실패:",
+          response.status,
+          response.statusText,
+          errorText
+        );
+        throw new Error(`댓글 수정에 실패했습니다: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("댓글 수정 실패:", error);
+      alert("댓글 수정 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 댓글 삭제
+  const handleCommentDelete = async (commentId: number) => {
+    if (!window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+      return;
+    }
+
+    if (!currentUser) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/${recipeId}/comments/${commentId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+            "User-Nickname": currentUser,
+          },
+        }
+      );
+
+      if (response.ok) {
+        // 댓글 목록을 다시 가져와서 삭제된 댓글 제거
+        await fetchComments();
+      } else {
+        const errorText = await response.text();
+        console.error(
+          "댓글 삭제 실패:",
+          response.status,
+          response.statusText,
+          errorText
+        );
+        throw new Error(`댓글 삭제에 실패했습니다: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("댓글 삭제 실패:", error);
+      alert("댓글 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
   // 댓글 좋아요 토글
   const handleCommentLike = async (commentId: number) => {
     if (!currentUser) {
@@ -457,7 +569,11 @@ export default function RecipeDetailPage() {
         <div className={styles.imageSection}>
           {recipe.imageUrl ? (
             <img
-              src={recipe.imageUrl}
+              src={
+                recipe.imageUrl && recipe.imageUrl.startsWith("/uploads")
+                  ? `https://after-ungratifying-lilyanna.ngrok-free.dev${recipe.imageUrl}`
+                  : recipe.imageUrl
+              }
               alt={recipe.title}
               className={styles.recipeImage}
             />
@@ -579,8 +695,11 @@ export default function RecipeDetailPage() {
                             onError={(e) => {
                               // 이미지 로드 실패시 기본 아바타로 대체
                               e.currentTarget.style.display = "none";
-                              e.currentTarget.nextElementSibling.style.display =
-                                "flex";
+                              const nextElement = e.currentTarget
+                                .nextElementSibling as HTMLElement;
+                              if (nextElement) {
+                                nextElement.style.display = "flex";
+                              }
                             }}
                           />
                         ) : null}
@@ -606,17 +725,67 @@ export default function RecipeDetailPage() {
                       <span className={styles.commentDate}>
                         {formatDate(comment.createdAt)}
                       </span>
-                      <button
-                        className={`${styles.commentLike} ${
-                          comment.isLikedByUser ? styles.liked : ""
-                        }`}
-                        onClick={() => handleCommentLike(comment.id)}
-                      >
-                        {comment.isLikedByUser ? "♥" : "♡"} {comment.likeCount}
-                      </button>
+                      <div className={styles.commentButtons}>
+                        {/* 본인 댓글인 경우에만 수정/삭제 버튼 표시 */}
+                        {currentUser === comment.userNickname && (
+                          <>
+                            <button
+                              className={styles.editCommentBtn}
+                              onClick={() => handleEditStart(comment)}
+                            >
+                              수정
+                            </button>
+                            <button
+                              className={styles.deleteCommentBtn}
+                              onClick={() => handleCommentDelete(comment.id)}
+                            >
+                              삭제
+                            </button>
+                          </>
+                        )}
+                        <button
+                          className={`${styles.commentLike} ${
+                            comment.isLikedByUser ? styles.liked : ""
+                          }`}
+                          onClick={() => handleCommentLike(comment.id)}
+                        >
+                          {comment.isLikedByUser ? "♥" : "♡"}{" "}
+                          {comment.likeCount}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <p className={styles.commentContent}>{comment.content}</p>
+
+                  {/* 댓글 내용 또는 수정 폼 */}
+                  {editingComment === comment.id ? (
+                    <div className={styles.editForm}>
+                      <div className={styles.editRatingInput}>
+                        <span>별점: </span>
+                        {renderStars(editRating, true, setEditRating)}
+                      </div>
+                      <textarea
+                        className={styles.editTextarea}
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                      />
+                      <div className={styles.editActions}>
+                        <button
+                          className={styles.editCancelBtn}
+                          onClick={handleEditCancel}
+                        >
+                          취소
+                        </button>
+                        <button
+                          className={styles.editSubmitBtn}
+                          onClick={() => handleEditSubmit(comment.id)}
+                        >
+                          수정 완료
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className={styles.commentContent}>{comment.content}</p>
+                  )}
 
                   {/* 답글 달기 버튼 */}
                   <div className={styles.commentFooter}>
@@ -669,8 +838,11 @@ export default function RecipeDetailPage() {
                                     className={styles.profileImage}
                                     onError={(e) => {
                                       e.currentTarget.style.display = "none";
-                                      e.currentTarget.nextElementSibling.style.display =
-                                        "flex";
+                                      const nextElement = e.currentTarget
+                                        .nextElementSibling as HTMLElement;
+                                      if (nextElement) {
+                                        nextElement.style.display = "flex";
+                                      }
                                     }}
                                   />
                                 ) : null}
@@ -695,11 +867,58 @@ export default function RecipeDetailPage() {
                               <span className={styles.commentDate}>
                                 {formatDate(reply.createdAt)}
                               </span>
+                              <div className={styles.commentButtons}>
+                                {/* 본인 대댓글인 경우에만 수정/삭제 버튼 표시 */}
+                                {currentUser === reply.userNickname && (
+                                  <>
+                                    <button
+                                      className={styles.editCommentBtn}
+                                      onClick={() => handleEditStart(reply)}
+                                    >
+                                      수정
+                                    </button>
+                                    <button
+                                      className={styles.deleteCommentBtn}
+                                      onClick={() =>
+                                        handleCommentDelete(reply.id)
+                                      }
+                                    >
+                                      삭제
+                                    </button>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </div>
-                          <p className={styles.commentContent}>
-                            {reply.content}
-                          </p>
+                          {/* 대댓글 내용 또는 수정 폼 */}
+                          {editingComment === reply.id ? (
+                            <div className={styles.editForm}>
+                              {/* 대댓글은 별점 수정 없음 */}
+                              <textarea
+                                className={styles.editTextarea}
+                                value={editContent}
+                                onChange={(e) => setEditContent(e.target.value)}
+                              />
+                              <div className={styles.editActions}>
+                                <button
+                                  className={styles.editCancelBtn}
+                                  onClick={handleEditCancel}
+                                >
+                                  취소
+                                </button>
+                                <button
+                                  className={styles.editSubmitBtn}
+                                  onClick={() => handleEditSubmit(reply.id)}
+                                >
+                                  수정 완료
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className={styles.commentContent}>
+                              {reply.content}
+                            </p>
+                          )}
                         </div>
                       ))}
                     </div>

@@ -140,8 +140,27 @@ export default function RecipeWritePage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // 파일 크기 검증 (예: 5MB 제한)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        alert("이미지 파일 크기는 5MB 이하여야 합니다.");
+        return;
+      }
+
+      // 파일 형식 검증
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/gif",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        alert("JPG, PNG, GIF 형식의 이미지만 업로드 가능합니다.");
+        return;
+      }
+
       setImageFile(file);
-      // 임시 URL 생성 (실제로는 서버에 업로드 후 URL 받아야 함)
+      // 미리보기용 임시 URL 생성 (실제 저장은 서버에서 처리)
       setFormData((prev) => ({
         ...prev,
         imageUrl: URL.createObjectURL(file),
@@ -179,49 +198,116 @@ export default function RecipeWritePage() {
     setIsSubmitting(true);
 
     try {
-      // 백엔드 API 명세서에 맞는 데이터 구조
-      const submitData = {
-        title: formData.title,
-        category: formData.category,
-        content: formData.content,
-        imageUrl: formData.imageUrl || "", // 선택 필드
-        mainIngredients: formData.mainIngredients, // 배열
-        seasonings: formData.seasonings, // 배열
-        tags: formData.tags, // 배열
-        rating: formData.rating,
-        userNickname: formData.userNickname,
-      };
-
-      console.log("백엔드로 전송할 데이터:", submitData);
-
       // 토큰 가져오기
       const userData = localStorage.getItem("user");
       const token = userData ? JSON.parse(userData).token : "";
 
-      // API 호출
-      const response = await fetch(
-        "https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(submitData),
+      const imageUrl = "";
+
+      // 이미지가 있는 경우와 없는 경우 분기 처리
+      if (imageFile) {
+        // 이미지+게시글 동시 업로드: /api/posts/with-image 사용
+        const formDataToSend = new FormData();
+
+        // 문자열로 변환해서 전송
+        formDataToSend.append("title", String(formData.title || ""));
+        formDataToSend.append("category", String(formData.category || ""));
+        formDataToSend.append("content", String(formData.content || ""));
+        formDataToSend.append("rating", String(formData.rating || 5));
+        formDataToSend.append(
+          "userNickname",
+          String(formData.userNickname || "")
+        );
+
+        // 배열은 JSON 문자열로 변환
+        formDataToSend.append(
+          "mainIngredients",
+          JSON.stringify(formData.mainIngredients || [])
+        );
+        formDataToSend.append(
+          "seasonings",
+          JSON.stringify(formData.seasonings || [])
+        );
+        formDataToSend.append("tags", JSON.stringify(formData.tags || []));
+
+        // 이미지 파일 (필드명: imageFile)
+        formDataToSend.append("imageFile", imageFile);
+
+        // 디버깅: FormData 내용 확인
+        console.log("FormData 내용:");
+        for (const [key, value] of formDataToSend.entries()) {
+          console.log(`${key}:`, value);
         }
-      );
 
-      console.log("응답 상태:", response.status, response.statusText);
+        console.log("이미지+게시글 동시 업로드 시작...");
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("에러 응답:", errorText);
-        throw new Error(`레시피 작성 실패: ${response.status} - ${errorText}`);
+        const response = await fetch(
+          "https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/with-image",
+          {
+            method: "POST",
+            headers: {
+              "ngrok-skip-browser-warning": "true",
+              Authorization: `Bearer ${token}`,
+              // Content-Type은 FormData 사용시 자동으로 설정됨
+            },
+            body: formDataToSend,
+          }
+        );
+
+        console.log("응답 상태:", response.status, response.statusText);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("에러 응답:", errorText);
+          throw new Error(
+            `레시피 작성 실패: ${response.status} - ${errorText}`
+          );
+        }
+
+        const result = await response.json();
+        console.log("작성된 레시피:", result);
+      } else {
+        // 이미지가 없는 경우: 기존 /api/posts 사용
+        const submitData = {
+          title: formData.title,
+          category: formData.category,
+          content: formData.content,
+          imageUrl: "", // 이미지 없음
+          mainIngredients: formData.mainIngredients,
+          seasonings: formData.seasonings,
+          tags: formData.tags,
+          rating: formData.rating,
+          userNickname: formData.userNickname,
+        };
+
+        console.log("이미지 없이 전송할 데이터:", submitData);
+
+        const response = await fetch(
+          "https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "ngrok-skip-browser-warning": "true",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(submitData),
+          }
+        );
+
+        console.log("응답 상태:", response.status, response.statusText);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("에러 응답:", errorText);
+          throw new Error(
+            `레시피 작성 실패: ${response.status} - ${errorText}`
+          );
+        }
+
+        const result = await response.json();
+        console.log("작성된 레시피:", result);
       }
-
-      const result = await response.json();
-      console.log("작성된 레시피:", result);
 
       alert("레시피가 성공적으로 작성되었습니다!");
       router.push("/recipes");

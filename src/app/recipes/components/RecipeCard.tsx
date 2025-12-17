@@ -34,11 +34,13 @@ export default function RecipeCard({
         }}
       >
         <div className={styles.imageContainer}>
-          <Image
-            src={recipe.image}
+          <img
+            src={
+              recipe.image && recipe.image.startsWith("/uploads")
+                ? `https://after-ungratifying-lilyanna.ngrok-free.dev${recipe.image}`
+                : recipe.image || "/images/default-recipe.jpg"
+            }
             alt={recipe.title}
-            width={300}
-            height={200}
             className={styles.recipeImage}
             onError={(e) => {
               // 이미지 로드 실패시 기본 이미지로 대체
