@@ -31,4 +31,7 @@ server:
 
 logging:
   level:
-    org.springframework.security: DEBUG
+    '[org.springframework.security]': DEBUG
+    '[com.example.demo]': DEBUG
+    '[org.springframework.web]': DEBUG
+    root: INFO

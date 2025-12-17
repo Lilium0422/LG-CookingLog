@@ -153,10 +153,9 @@ class UserService(
     }
     
     private fun saveImageFile(imageFile: MultipartFile): String {
-        // 파일 저장 로직 (간단한 예시)
-        val uploadDir = "uploads/profiles/"
         val fileName = "${UUID.randomUUID()}_${imageFile.originalFilename}"
-        val filePath = Paths.get(uploadDir + fileName)
+        val uploadDir = Paths.get("uploads/profiles")
+        val filePath = uploadDir.resolve(fileName)
         
         // 디렉토리 생성
         Files.createDirectories(filePath.parent)
@@ -172,5 +171,21 @@ class UserService(
             throw RuntimeException("존재하지 않는 사용자입니다")
         }
         userRepository.deleteById(id)
+    }
+    
+    // 중복확인 메서드들 추가
+    @Transactional(readOnly = true)
+    fun isUserIdDuplicate(userId: String): Boolean {
+        return userRepository.existsByUserId(userId)
+    }
+    
+    @Transactional(readOnly = true)
+    fun isNicknameDuplicate(nickname: String): Boolean {
+        return userRepository.existsByNickname(nickname)
+    }
+    
+    @Transactional(readOnly = true)
+    fun isPhoneNumberDuplicate(phoneNumber: String): Boolean {
+        return userRepository.existsByPhoneNumber(phoneNumber)
     }
 }
