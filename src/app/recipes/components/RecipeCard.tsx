@@ -30,7 +30,7 @@ export default function RecipeCard({
       <div
         className={styles.recipeCard}
         style={{
-          animationDelay: `${index * 0.2}s`, // 각 줄마다 0.3초씩 지연 (3개씩 한번에)
+          animationDelay: `${index * 0.15}s`, // 각 줄마다 0.15초씩 지연 (더 부드럽게)
         }}
       >
         <div className={styles.imageContainer}>

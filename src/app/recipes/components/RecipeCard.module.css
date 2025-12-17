@@ -12,22 +12,17 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 
-    /* 초기 상태: 아래쪽에 숨겨져 있고 투명함 */
+    /* 초기 상태: 더 부드럽게 */
     opacity: 0;
-    transform: translateY(40px) scale(0.95);
-    animation: slideUpFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    transform: translateY(20px) scale(0.98);
+    animation: slideUpFadeIn 1s ease-out forwards;
 }
 
-/* 아래에서 위로 올라오는 애니메이션 */
+/* 아래에서 위로 올라오는 애니메이션 - 더 차분하게 */
 @keyframes slideUpFadeIn {
     0% {
         opacity: 0;
-        transform: translateY(40px) scale(0.95);
-    }
-
-    60% {
-        opacity: 0.8;
-        transform: translateY(-5px) scale(1.02);
+        transform: translateY(20px) scale(0.98);
     }
 
     100% {

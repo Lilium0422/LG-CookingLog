@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./recipes.module.css";
 import RecipeCard from "./components/RecipeCard";
+import RecipeCardSkeleton from "./components/RecipeCardSkeleton";
 import SearchBar from "./components/SearchBar";
 import CategoryDropdown from "./components/CategoryDropdown";
 
@@ -215,7 +216,62 @@ export default function RecipesPage() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [animationKey, setAnimationKey] = useState(0); // 애니메이션 재트리거용
+  const [recipeRatings, setRecipeRatings] = useState<{ [key: number]: number }>(
+    {}
+  ); // 레시피별 평균 별점
   const recipesPerPage = 9;
+
+  // 댓글 타입 정의 (간단 버전)
+  interface SimpleComment {
+    rating: number;
+    parentCommentId: number | null;
+  }
+
+  // 댓글 기반 평균 별점 계산 함수 (대댓글 제외)
+  const calculateAverageRating = useCallback((comments: SimpleComment[]) => {
+    if (!comments || comments.length === 0) {
+      return 0;
+    }
+
+    // 대댓글이 아닌 일반 댓글만 필터링 (parentCommentId가 null인 것)
+    const mainComments = comments.filter(
+      (comment) => comment.parentCommentId === null && comment.rating > 0
+    );
+
+    if (mainComments.length === 0) {
+      return 0;
+    }
+
+    const sum = mainComments.reduce((acc, comment) => acc + comment.rating, 0);
+    return Math.round((sum / mainComments.length) * 10) / 10;
+  }, []);
+
+  // 개별 레시피의 댓글 평균 별점 가져오기
+  const fetchRecipeRating = useCallback(
+    async (recipeId: number) => {
+      try {
+        const response = await fetch(
+          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/${recipeId}/comments`,
+          {
+            headers: {
+              "ngrok-skip-browser-warning": "true",
+            },
+          }
+        );
+        if (response.ok) {
+          const comments: SimpleComment[] = await response.json();
+          const avgRating = calculateAverageRating(comments);
+          setRecipeRatings((prev) => ({
+            ...prev,
+            [recipeId]: avgRating,
+          }));
+        }
+      } catch (error) {
+        console.error(`레시피 ${recipeId} 별점 조회 실패:`, error);
+      }
+    },
+    [calculateAverageRating]
+  );
 
   // 백엔드에서 레시피 목록 가져오기
   useEffect(() => {
@@ -231,8 +287,15 @@ export default function RecipesPage() {
         );
         if (response.ok) {
           const data: Recipe[] = await response.json();
+          console.log("레시피 목록 원본 데이터:", data); // 디버깅용
           const transformedRecipes = data.map(transformRecipe);
+          console.log("변환된 레시피 데이터:", transformedRecipes); // 디버깅용
           setRecipes(transformedRecipes);
+
+          // 각 레시피의 댓글 기반 평균 별점 가져오기
+          transformedRecipes.forEach((recipe) => {
+            fetchRecipeRating(recipe.id);
+          });
         }
       } catch (error) {
         console.error("레시피 목록 조회 실패:", error);
@@ -242,7 +305,7 @@ export default function RecipesPage() {
     };
 
     fetchRecipes();
-  }, []);
+  }, [fetchRecipeRating]);
 
   // 검색 및 필터링 로직
   const filteredRecipes = recipes.filter((recipe) => {
@@ -365,7 +428,7 @@ export default function RecipesPage() {
             onCategorySelect={handleCategoryChange}
           />
           <Link href="/recipes/write" className={styles.writeButton}>
-            ✏️ 글쓰기
+            글쓰기
           </Link>
         </div>
 
@@ -396,18 +459,41 @@ export default function RecipesPage() {
 
         {/* 레시피 그리드 */}
         <div className={styles.recipeGrid} key={animationKey}>
-          {currentRecipes.map((recipe, index) => {
-            // 한 줄에 3개씩 표시되므로, 줄 번호를 계산 (0, 0, 0, 1, 1, 1, 2, 2, 2, ...)
-            const rowIndex = Math.floor(index / 3);
-            return (
-              <RecipeCard
-                key={`${animationKey}-${recipe.id}`} // 애니메이션 키와 함께 고유 키 생성
-                recipe={recipe}
-                onHashtagClick={handleHashtagClick}
-                index={rowIndex} // 줄 번호를 전달
-              />
-            );
-          })}
+          {loading
+            ? // 로딩 중일 때 스켈레톤 카드들 표시 (9개)
+              Array.from({ length: 9 }, (_, index) => {
+                const rowIndex = Math.floor(index / 3);
+                return (
+                  <RecipeCardSkeleton
+                    key={`skeleton-${index}`}
+                    index={rowIndex}
+                  />
+                );
+              })
+            : // 실제 레시피 카드들 표시
+              currentRecipes.map((recipe, index) => {
+                // 한 줄에 3개씩 표시되므로, 줄 번호를 계산 (0, 0, 0, 1, 1, 1, 2, 2, 2, ...)
+                const rowIndex = Math.floor(index / 3);
+                // 댓글 기반 평균 별점이 있으면 사용, 없으면 원본 별점 사용
+                const avgRating =
+                  recipeRatings[recipe.id] !== undefined
+                    ? recipeRatings[recipe.id]
+                    : recipe.rating;
+
+                const recipeWithAvgRating = {
+                  ...recipe,
+                  rating: avgRating,
+                };
+
+                return (
+                  <RecipeCard
+                    key={`${animationKey}-${recipe.id}`} // 애니메이션 키와 함께 고유 키 생성
+                    recipe={recipeWithAvgRating}
+                    onHashtagClick={handleHashtagClick}
+                    index={rowIndex} // 줄 번호를 전달
+                  />
+                );
+              })}
         </div>
 
         {/* 검색 결과가 없을 때 */}
