@@ -1,6 +1,6 @@
 .container {
   width: 100%;
-  margin-top: 60px;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -104,4 +104,106 @@
 
 .signupButton:hover {
   opacity: 0.9;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 20px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .divider {
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .formBox {
+    width: 100%;
+    max-width: 380px;
+    gap: 16px;
+  }
+
+  .inputWrapper {
+    height: 50px;
+  }
+
+  .input {
+    font-size: 14px;
+  }
+
+  .checkButton {
+    width: 100px;
+    height: 50px;
+    font-size: 14px;
+  }
+
+  .signupButton {
+    height: 50px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 16px;
+  }
+
+  .title {
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .divider {
+    margin-bottom: 24px;
+  }
+
+  .formBox {
+    gap: 14px;
+  }
+
+  .inputWrapper {
+    height: 48px;
+  }
+
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .input {
+    font-size: 13px;
+  }
+
+  .input::placeholder {
+    font-size: 13px;
+  }
+
+  .row {
+    gap: 8px;
+  }
+
+  .checkButton {
+    width: 90px;
+    height: 48px;
+    font-size: 13px;
+  }
+
+  .signupButton {
+    height: 48px;
+    font-size: 17px;
+    margin-top: 8px;
+  }
 }
