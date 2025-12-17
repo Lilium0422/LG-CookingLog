@@ -47,16 +47,28 @@ export default function LoginPage() {
       const data = await response.json();
       console.log("로그인 응답:", data);
 
-      /* ✅ 헤더에서 바로 쓰기 좋은 구조로 저장 */
+      // 토큰 저장
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
+      // 사용자 정보 저장
       const userInfo = {
-        userId: data.userId ?? data.data?.userId,
-        nickname: data.nickname ?? data.data?.nickname,
+        userId: data.user?.userId || data.userId,
+        nickname: data.user?.nickname || data.nickname,
+        id: data.user?.id,
+        phoneNumber: data.user?.phoneNumber,
+        bio: data.user?.bio,
+        profileImageUrl: data.user?.profileImageUrl,
       };
 
+      console.log("저장할 유저 정보:", userInfo);
       localStorage.setItem("user", JSON.stringify(userInfo));
 
-      /* ✅ 헤더 즉시 갱신 */
-      window.dispatchEvent(new Event("userUpdated"));
+      // 헤더 즉시 갱신 (약간의 지연 추가)
+      setTimeout(() => {
+        window.dispatchEvent(new Event("userUpdated"));
+      }, 100);
 
       setPopupMessage(`${userInfo.nickname}님, 로그인이 완료되었습니다!`);
       setLoginSuccess(true);

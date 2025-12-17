@@ -4,6 +4,7 @@ import "./globals.css";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FloatingChatButton from "@/components/FloatingChatButton";
 
 //폰트 적용 (나중에 suite variable 바꿔야함)
 const geistSans = Geist({
@@ -19,6 +20,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "쿠킹로그 - CookingLog",
   description: "레시피 공유 및 별점 플랫폼",
+  icons: {
+    icon: "/tab-logo.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -27,7 +31,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Header />
         <main style={{ minHeight: "calc(100vh - 140px)" }}>{children}</main>
-        <Footer /> 
+        <Footer />
+        <FloatingChatButton />
       </body>
     </html>
   );

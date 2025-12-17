@@ -29,14 +29,14 @@ export default function Header() {
 
       try {
         const parsed = JSON.parse(stored);
+        console.log("헤더에서 파싱한 유저 정보:", parsed);
 
-        const nickname =
-          parsed.nickname ??         
-          parsed.user?.nickname;   
+        const userNickname = parsed.nickname || parsed.user?.nickname;
 
-        if (nickname) {
+        if (userNickname) {
           setIsLoggedIn(true);
-          setNickname(nickname);
+          setNickname(userNickname);
+          console.log("로그인 상태 업데이트:", userNickname);
         } else {
           setIsLoggedIn(false);
           setNickname(null);
@@ -48,8 +48,10 @@ export default function Header() {
       }
     };
 
-    syncUser(); // 최초 1회 실행
+    // 최초 실행
+    syncUser();
 
+    // 이벤트 리스너 등록
     window.addEventListener("storage", syncUser);
     window.addEventListener("userUpdated", syncUser);
 
@@ -73,6 +75,9 @@ export default function Header() {
   /* 로그아웃 */
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setNickname(null);
     window.dispatchEvent(new Event("userUpdated"));
     router.push("/home");
   };
@@ -132,9 +137,9 @@ export default function Header() {
                 로그아웃
               </button>
 
-              <button className={styles.writeBtn}>
+              <Link href="/recipes/write" className={styles.writeBtn}>
                 글쓰기
-              </button>
+              </Link>
             </div>
           )}
         </div>
@@ -165,7 +170,7 @@ export default function Header() {
             <Link href="/mypage" onClick={() => setOpen(false)}>
               마이페이지
             </Link>
-            <Link href="/mypage" onClick={() => setOpen(false)}>
+            <Link href="/recipes/write" onClick={() => setOpen(false)}>
               글쓰기
             </Link>
             <button

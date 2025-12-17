@@ -1,0 +1,70 @@
+.floatingButton {
+  position: fixed;
+  bottom: 60px;
+  right: 50px;
+  width: 70px;
+  height: 70px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 999;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.floatingButton:hover {
+  transform: scale(1.1);
+}
+
+.floatingButton:active {
+  transform: scale(0.95);
+}
+
+.chatIcon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .floatingButton {
+    bottom: 25px;
+    right: 25px;
+    width: 65px;
+    height: 65px;
+  }
+
+  .chatIcon {
+    width: 65px;
+    height: 65px;
+  }
+}
+
+@media (max-width: 768px) {
+  .floatingButton {
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .chatIcon {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .floatingButton {
+    bottom: 16px;
+    right: 16px;
+    width: 55px;
+    height: 55px;
+  }
+
+  .chatIcon {
+    width: 55px;
+    height: 55px;
+  }
+}

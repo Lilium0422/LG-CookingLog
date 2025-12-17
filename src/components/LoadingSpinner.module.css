@@ -1,0 +1,67 @@
+.spinnerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  width: 100%;
+  gap: 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff6b35;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingText {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .spinnerContainer {
+    min-height: 300px;
+    gap: 16px;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+  }
+
+  .loadingText {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .spinnerContainer {
+    min-height: 250px;
+    gap: 12px;
+  }
+
+  .spinner {
+    width: 35px;
+    height: 35px;
+  }
+
+  .loadingText {
+    font-size: 13px;
+  }
+}
