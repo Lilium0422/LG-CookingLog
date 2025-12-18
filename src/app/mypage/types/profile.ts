@@ -2,6 +2,10 @@
 import { SurveyAnswers } from '../components/CookingSurvey';
 
 export interface ProfileData {
+  id: number;
+  userId: string;
+  nickname: string;
+  phoneNumber: string;
   imageUrl: string;
   bio: string;
   survey: SurveyAnswers;

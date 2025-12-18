@@ -12,11 +12,8 @@ function getUser() {
   if (!raw) throw new Error('유저 정보가 없습니다.');
 
   const parsed = JSON.parse(raw);
-  if (!parsed.user) {
-    throw new Error('user 정보가 없습니다.');
-  }
 
-  return parsed.user; // { id, userId, nickname ... }
+  return parsed;
 }
 
 /* ======================
@@ -66,6 +63,8 @@ export async function fetchProfile(): Promise<ProfileData> {
   return {
     id: data.id,
     userId: data.userId,
+    nickname: data.nickname,
+    phoneNumber: data.phoneNumber,
     bio: data.bio ?? '',
     survey: parseSurvey(data.survey),
     imageUrl: resolveProfileImage(data.profileImageUrl),
@@ -105,6 +104,8 @@ export async function updateProfile(
     return {
       id: data.id,
       userId: data.userId,
+      nickname: data.nickname,
+      phoneNumber: data.phoneNumber,
       bio: data.bio ?? '',
       survey: parseSurvey(data.survey),
       imageUrl: resolveProfileImage(data.profileImageUrl),
@@ -135,6 +136,8 @@ export async function updateProfile(
   return {
     id: data.id,
     userId: data.userId,
+    nickname: data.nickname,
+    phoneNumber: data.phoneNumber,
     bio: data.bio ?? '',
     survey: parseSurvey(data.survey),
     imageUrl: resolveProfileImage(data.profileImageUrl),

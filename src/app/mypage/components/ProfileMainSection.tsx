@@ -15,6 +15,10 @@ const ProfileMainSection = () => {
 
   const [original, setOriginal] = useState<ProfileData | null>(null);
   const [form, setForm] = useState<ProfileData>({
+    id: 0,
+    userId: '',
+    nickname: '',
+    phoneNumber: '',
     imageUrl: DEFAULT_IMAGE,
     bio: '',
     survey: {},
