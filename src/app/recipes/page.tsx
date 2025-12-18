@@ -219,6 +219,9 @@ export default function RecipesPage() {
   const [recipeRatings, setRecipeRatings] = useState<{ [key: number]: number }>(
     {}
   ); // 레시피별 평균 별점
+  const [showLikedOnly, setShowLikedOnly] = useState(false); // 좋아요한 게시글만 보기
+  const [likedRecipes, setLikedRecipes] = useState<number[]>([]); // 좋아요한 게시글 ID 목록
+  const [sortType, setSortType] = useState<"latest" | "likes">("latest"); // 정렬 타입
   const recipesPerPage = 9;
 
   // 댓글 타입 정의 (간단 버전)
@@ -273,6 +276,33 @@ export default function RecipesPage() {
     [calculateAverageRating]
   );
 
+  // 좋아요한 게시글 목록 가져오기
+  const fetchLikedRecipes = useCallback(async () => {
+    try {
+      const userData = localStorage.getItem("user");
+      if (!userData) return;
+
+      const token = localStorage.getItem("token"); // 토큰은 별도 키로 저장됨
+      const response = await fetch(
+        "https://after-ungratifying-lilyanna.ngrok-free.dev/api/likes/my-likes",
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const likedPosts: Recipe[] = await response.json();
+        const likedIds = likedPosts.map((post) => post.id);
+        setLikedRecipes(likedIds);
+      }
+    } catch (error) {
+      console.error("좋아요한 게시글 목록 조회 실패:", error);
+    }
+  }, []);
+
   // 백엔드에서 레시피 목록 가져오기
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -305,30 +335,54 @@ export default function RecipesPage() {
     };
 
     fetchRecipes();
-  }, [fetchRecipeRating]);
+    fetchLikedRecipes(); // 좋아요한 게시글 목록도 함께 가져오기
+  }, [fetchRecipeRating, fetchLikedRecipes]);
 
   // 검색 및 필터링 로직
-  const filteredRecipes = recipes.filter((recipe) => {
-    // 해시태그 필터링 (해시태그가 선택된 경우)
-    if (selectedHashtag) {
-      const matchesHashtag = recipe.hashtags.includes(selectedHashtag);
+  const filteredRecipes = recipes
+    .filter((recipe) => {
+      // 좋아요한 게시글만 보기 필터링
+      if (showLikedOnly && !likedRecipes.includes(recipe.id)) {
+        return false;
+      }
+
+      // 해시태그 필터링 (해시태그가 선택된 경우)
+      if (selectedHashtag) {
+        const matchesHashtag = recipe.hashtags.includes(selectedHashtag);
+        const matchesCategory =
+          selectedCategory === "전체 보기" ||
+          recipe.category === selectedCategory;
+        return matchesHashtag && matchesCategory;
+      }
+
+      // 일반 검색 (Enter로 검색한 경우)
+      const matchesSearch =
+        searchTerm === "" ||
+        recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        recipe.content.toLowerCase().includes(searchTerm.toLowerCase());
+
       const matchesCategory =
         selectedCategory === "전체 보기" ||
         recipe.category === selectedCategory;
-      return matchesHashtag && matchesCategory;
-    }
 
-    // 일반 검색 (Enter로 검색한 경우)
-    const matchesSearch =
-      searchTerm === "" ||
-      recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      recipe.content.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesCategory =
-      selectedCategory === "전체 보기" || recipe.category === selectedCategory;
-
-    return matchesSearch && matchesCategory;
-  });
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      if (sortType === "latest") {
+        // 최신순: 날짜 기준 내림차순
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      } else if (sortType === "likes") {
+        // 좋아요순: 평균 별점 기준 내림차순
+        const aRating =
+          recipeRatings[a.id] !== undefined ? recipeRatings[a.id] : a.rating;
+        const bRating =
+          recipeRatings[b.id] !== undefined ? recipeRatings[b.id] : b.rating;
+        return bRating - aRating;
+      }
+      return 0;
+    });
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
@@ -423,17 +477,62 @@ export default function RecipesPage() {
 
         {/* 카테고리 드롭다운과 글쓰기 버튼 */}
         <div className={styles.actionBar}>
-          <CategoryDropdown
-            selectedCategory={selectedCategory}
-            onCategorySelect={handleCategoryChange}
-          />
-          <Link href="/recipes/write" className={styles.writeButton}>
-            글쓰기
-          </Link>
+          <div className={styles.leftActions}>
+            <CategoryDropdown
+              selectedCategory={selectedCategory}
+              onCategorySelect={handleCategoryChange}
+            />
+            <button
+              className={`${styles.likedOnlyButton} ${
+                showLikedOnly ? styles.active : ""
+              }`}
+              onClick={() => {
+                setShowLikedOnly(!showLikedOnly);
+                setCurrentPage(1); // 첫 페이지로
+                setAnimationKey((prev) => prev + 1); // 애니메이션 재트리거
+              }}
+            >
+              ♥ 좋아요 한 게시글만
+            </button>
+          </div>
+
+          <div className={styles.rightActions}>
+            <Link href="/recipes/write" className={styles.writeButton}>
+              글쓰기
+            </Link>
+
+            {/* 정렬 버튼들 */}
+            <div className={styles.sortButtons}>
+              <button
+                className={`${styles.sortButton} ${
+                  sortType === "latest" ? styles.active : ""
+                }`}
+                onClick={() => {
+                  setSortType("latest");
+                  setCurrentPage(1);
+                  setAnimationKey((prev) => prev + 1);
+                }}
+              >
+                최신순
+              </button>
+              <button
+                className={`${styles.sortButton} ${
+                  sortType === "likes" ? styles.active : ""
+                }`}
+                onClick={() => {
+                  setSortType("likes");
+                  setCurrentPage(1);
+                  setAnimationKey((prev) => prev + 1);
+                }}
+              >
+                좋아요순
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* 현재 필터 상태 표시 */}
-        {(searchTerm || selectedHashtag) && (
+        {(searchTerm || selectedHashtag || showLikedOnly) && (
           <div className={styles.filterStatus}>
             {searchTerm && (
               <span className={styles.filterTag}>
@@ -452,6 +551,12 @@ export default function RecipesPage() {
               <span className={styles.filterTag}>
                 해시태그: {selectedHashtag}
                 <button onClick={() => setSelectedHashtag("")}>×</button>
+              </span>
+            )}
+            {showLikedOnly && (
+              <span className={styles.filterTag}>
+                좋아요 한 게시글만
+                <button onClick={() => setShowLikedOnly(false)}>×</button>
               </span>
             )}
           </div>
