@@ -90,6 +90,33 @@ class UserController(
         }
     }
     
+    @GetMapping("/check-userid/{userId}")
+    fun checkUserIdDuplicate(@PathVariable userId: String): ResponseEntity<Map<String, Any>> {
+        val isDuplicate = userService.isUserIdDuplicate(userId)
+        return ResponseEntity.ok(mapOf(
+            "isDuplicate" to isDuplicate,
+            "message" to if (isDuplicate) "이미 사용 중인 아이디입니다" else "사용 가능한 아이디입니다"
+        ))
+    }
+    
+    @GetMapping("/check-nickname/{nickname}")
+    fun checkNicknameDuplicate(@PathVariable nickname: String): ResponseEntity<Map<String, Any>> {
+        val isDuplicate = userService.isNicknameDuplicate(nickname)
+        return ResponseEntity.ok(mapOf(
+            "isDuplicate" to isDuplicate,
+            "message" to if (isDuplicate) "이미 사용 중인 닉네임입니다" else "사용 가능한 닉네임입니다"
+        ))
+    }
+    
+    @GetMapping("/check-phone/{phoneNumber}")
+    fun checkPhoneNumberDuplicate(@PathVariable phoneNumber: String): ResponseEntity<Map<String, Any>> {
+        val isDuplicate = userService.isPhoneNumberDuplicate(phoneNumber)
+        return ResponseEntity.ok(mapOf(
+            "isDuplicate" to isDuplicate,
+            "message" to if (isDuplicate) "이미 사용 중인 전화번호입니다" else "사용 가능한 전화번호입니다"
+        ))
+    }
+    
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: Long): ResponseEntity<Any> {
         return try {

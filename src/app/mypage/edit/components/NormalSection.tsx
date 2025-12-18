@@ -28,10 +28,8 @@ const NormalSection = () => {
 
     const user: LocalUser = JSON.parse(storedUser);
 
-    // ✅ id는 API path에 사용
     setUserId(user.id);
 
-    // ✅ 수정 대상 필드만 세팅
     setForm({
       nickname: user.nickname ?? '',
       phoneNumber: user.phoneNumber ?? '',
@@ -48,7 +46,9 @@ const NormalSection = () => {
     }));
   };
 
-  /* 저장 */
+  /* ===========================
+     저장 — 백엔드 요구 형식에 맞추기
+  ============================ */
   const handleSave = async () => {
     if (!userId) {
       alert('사용자 정보를 불러올 수 없습니다.');
@@ -58,24 +58,30 @@ const NormalSection = () => {
     try {
       setLoading(true);
 
-      // ✅ nickname, phoneNumber만 전송
-      const res = await fetch(`https://after-ungratifying-lilyanna.ngrok-free.dev/api/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nickname: form.nickname,
-          phoneNumber: form.phoneNumber,
-        }),
-      });
+      // ⭐ 백엔드 요구 형식 맞추기
+      const updateData = {
+        nickname: form.nickname,
+        phoneNumber: form.phoneNumber,
+      };
+
+      const res = await fetch(
+        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/users/${userId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
 
       if (!res.ok) {
-        throw new Error('저장 실패');
+        const errText = await res.text();
+        throw new Error(errText || '저장 실패');
       }
 
       /* =====================
-         localStorage도 최신 값으로 업데이트
+         localStorage 업데이트
       ====================== */
       const storedUser = JSON.parse(localStorage.getItem('user')!);
 
@@ -102,13 +108,12 @@ const NormalSection = () => {
       <h1>회원 정보</h1>
 
       <section className={css.main}>
-        <h3 className={css.title}>
-          기본 정보
-        </h3>
+        <h3 className={css.title}>기본 정보</h3>
+
         <h4>닉네임</h4>
         <input
           type="text"
-          name="nickname"
+          name="nickName"
           value={form.nickname}
           onChange={handleChange}
         />
@@ -120,12 +125,11 @@ const NormalSection = () => {
           value={form.phoneNumber}
           onChange={handleChange}
         />
-        
+
         <button onClick={handleSave} disabled={loading}>
           {loading ? '저장 중...' : '저장'}
         </button>
       </section>
-
     </div>
   );
 };

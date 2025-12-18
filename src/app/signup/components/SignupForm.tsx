@@ -27,6 +27,12 @@ interface SignupFormProps {
     isLongEnough: boolean;
     isValid: boolean;
   };
+  passwordValidation: {
+    hasUpperCase: boolean;
+    hasSpecialChar: boolean;
+    validLength: boolean;
+    isValid: boolean;
+  };
   onCheckUserId: () => void;
   onCheckNickname: () => void;
   onCheckPhoneNumber: () => void;
@@ -54,6 +60,7 @@ export default function SignupForm({
   setPasswordMatch,
   phoneNumberError,
   userIdValidation,
+  passwordValidation,
   onCheckUserId,
   onCheckNickname,
   onCheckPhoneNumber,
@@ -92,28 +99,26 @@ export default function SignupForm({
                 : "중복확인"}
           </button>
         </div>
-        {userId && (
-          <div className={styles.validationMessages}>
-            <div
-              className={
-                userIdValidation.hasEnglish
-                  ? styles.validationSuccess
-                  : styles.validationError
-              }
-            >
-              영어 포함
-            </div>
-            <div
-              className={
-                userIdValidation.isLongEnough
-                  ? styles.validationSuccess
-                  : styles.validationError
-              }
-            >
-              5자 이상
-            </div>
+        <div className={styles.validationMessages}>
+          <div
+            className={
+              userIdValidation.hasEnglish
+                ? styles.validationSuccess
+                : styles.validationError
+            }
+          >
+            영어 포함
           </div>
-        )}
+          <div
+            className={
+              userIdValidation.isLongEnough
+                ? styles.validationSuccess
+                : styles.validationError
+            }
+          >
+            5자 이상
+          </div>
+        </div>
       </div>
 
       {/* 닉네임 */}
@@ -167,23 +172,36 @@ export default function SignupForm({
       </div>
 
       {/* 비밀번호 */}
-      <div className={styles.inputWrapper}>
-        <input
-          type="password"
-          placeholder="비밀번호 입력"
-          className={styles.input}
-          value={password}
-          onChange={(e) => {
-            const newPassword = e.target.value;
-            setPassword(newPassword);
-            if (newPassword && passwordCheck) {
-              setPasswordMatch(newPassword === passwordCheck);
-            } else {
-              setPasswordMatch(null);
-            }
-          }}
-        />
-        <img src="/icon/lock-icon.svg" className={styles.icon} alt="" />
+      <div>
+        <div className={styles.inputWrapper}>
+          <input
+            type="password"
+            placeholder="비밀번호 입력"
+            className={styles.input}
+            value={password}
+            onChange={(e) => {
+              const newPassword = e.target.value;
+              setPassword(newPassword);
+              if (newPassword && passwordCheck) {
+                setPasswordMatch(newPassword === passwordCheck);
+              } else {
+                setPasswordMatch(null);
+              }
+            }}
+          />
+          <img src="/icon/lock-icon.svg" className={styles.icon} alt="" />
+        </div>
+        <div className={styles.passwordRules}>
+          <span className={passwordValidation.hasUpperCase ? styles.ruleValid : styles.ruleInvalid}>
+            대문자 포함
+          </span>
+          <span className={passwordValidation.hasSpecialChar ? styles.ruleValid : styles.ruleInvalid}>
+            특수문자 포함
+          </span>
+          <span className={passwordValidation.validLength ? styles.ruleValid : styles.ruleInvalid}>
+            8~20자 이내
+          </span>
+        </div>
       </div>
 
       {/* 비밀번호 확인 */}
