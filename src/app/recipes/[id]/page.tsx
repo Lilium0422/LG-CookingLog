@@ -81,6 +81,7 @@ export default function RecipeDetailPage() {
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   // 대댓글 관련 상태
   const [replyingTo, setReplyingTo] = useState<number | null>(null); // 답글 달고 있는 댓글 ID
@@ -176,12 +177,40 @@ export default function RecipeDetailPage() {
     }
   }, [recipeId]);
 
+  // 게시글 좋아요 상태 조회
+  const fetchPostLikeStatus = useCallback(async () => {
+    try {
+      const userData = localStorage.getItem("user");
+      if (!userData) return;
+
+      const token = localStorage.getItem("token"); // 토큰은 별도 키로 저장됨
+      const response = await fetch(
+        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/likes/status/${recipeId}`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsLiked(data.liked);
+        setLikeCount(data.likeCount);
+      }
+    } catch (error) {
+      console.error("게시글 좋아요 상태 조회 실패:", error);
+    }
+  }, [recipeId]);
+
   // 댓글 목록 가져오기 (별도 useEffect)
   useEffect(() => {
     if (recipeId) {
       fetchComments();
+      fetchPostLikeStatus(); // 게시글 좋아요 상태도 함께 가져오기
     }
-  }, [recipeId, fetchComments]);
+  }, [recipeId, fetchComments, fetchPostLikeStatus]);
 
   // 본인 글인지 확인
   const isOwner = recipe && currentUser && recipe.userNickname === currentUser;
@@ -273,6 +302,7 @@ export default function RecipeDetailPage() {
             content: newComment,
             rating: newRating,
             parentCommentId: null,
+            likeCount: 0,
           }),
         }
       );
@@ -324,6 +354,7 @@ export default function RecipeDetailPage() {
             content: replyContent,
             rating: 1, // 대댓글은 기본 별점 1점 (백엔드 필수 필드)
             parentCommentId: parentCommentId,
+            likeCount: 0, // 임시: 백엔드에서 처리할 때까지
           }),
         }
       );
@@ -474,6 +505,42 @@ export default function RecipeDetailPage() {
     }
   };
 
+  // 게시글 좋아요 토글
+  const handlePostLike = async () => {
+    try {
+      const userData = localStorage.getItem("user");
+      if (!userData) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/likes/toggle/${recipeId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        setIsLiked(result.liked);
+        setLikeCount(result.likeCount);
+      } else {
+        throw new Error("좋아요 처리에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("게시글 좋아요 실패:", error);
+      alert("좋아요 처리 중 오류가 발생했습니다.");
+    }
+  };
+
   // 댓글 좋아요 토글
   const handleCommentLike = async (commentId: number) => {
     if (!currentUser) {
@@ -553,15 +620,14 @@ export default function RecipeDetailPage() {
             <h1 className={styles.recipeTitle}>{recipe.title}</h1>
             <button
               className={`${styles.likeButton} ${isLiked ? styles.liked : ""}`}
-              onClick={() => setIsLiked(!isLiked)}
+              onClick={handlePostLike}
             >
-              ♡
+              {isLiked ? "♥" : "♡"} {likeCount}
             </button>
           </div>
           <div className={styles.authorInfo}>
             <span className={styles.author}>{recipe.userNickname}</span>
             <span className={styles.date}>{formatDate(recipe.createdAt)}</span>
-            <div className={styles.authorAvatar}>👨‍🍳</div>
           </div>
         </header>
 

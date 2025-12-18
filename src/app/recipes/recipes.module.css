@@ -156,8 +156,89 @@
 .actionBar {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 20px;
+}
+
+.leftActions {
+    display: flex;
     align-items: center;
-    margin-bottom: 30px;
+    gap: 15px;
+}
+
+.rightActions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.likedOnlyButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: white;
+    color: #666;
+    border: 2px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.likedOnlyButton:hover {
+    border-color: #ff6b35;
+    color: #ff6b35;
+}
+
+.likedOnlyButton.active {
+    background-color: #ff6b35;
+    color: white;
+    border-color: #ff6b35;
+}
+
+.likedOnlyButton.active:hover {
+    background-color: #e55a2b;
+    border-color: #e55a2b;
+}
+
+.sortButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.sortButton {
+    background-color: white;
+    color: #999;
+    border: 2px solid #e0e0e0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+}
+
+.sortButton:hover {
+    border-color: #ccc;
+    color: #666;
+}
+
+.sortButton.active {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+    opacity: 1;
+    font-weight: 600;
+}
+
+.sortButton.active:hover {
+    background-color: #222;
+    border-color: #222;
 }
 
 .writeButton {
@@ -193,6 +274,24 @@
         align-items: flex-start;
     }
 
+    .actionBar {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .leftActions {
+        justify-content: center;
+    }
+
+    .rightActions {
+        align-items: center;
+    }
+
+    .sortButtons {
+        justify-content: center;
+    }
+
     .recipeGrid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 16px;
@@ -201,5 +300,10 @@
     .filterTag {
         font-size: 12px;
         padding: 4px 10px;
+    }
+
+    .sortButton {
+        font-size: 13px;
+        padding: 6px 14px;
     }
 }
