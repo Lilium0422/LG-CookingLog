@@ -151,7 +151,6 @@
 .validationMessages {
   display: flex;
   gap: 12px;
-  margin-top: 8px;
   margin-left: 4px;
 }
 
@@ -172,7 +171,6 @@
 .passwordRules {
   display: flex;
   gap: 12px;
-  margin-top: 8px;
   margin-left: 4px;
   font-size: 12px;
 }
