@@ -45,7 +45,30 @@ const Sidebar = () => {
     return () => window.removeEventListener('profileUpdated', handler);
   }, []);
 
-  // if (!profile) return null; 임시로 
+  /* ======================
+     ⭐ nickname 즉시 반영
+  ====================== */
+  useEffect(() => {
+    const handler = () => {
+      const rawUser = localStorage.getItem('user');
+      if (!rawUser) return;
+
+      const user = JSON.parse(rawUser);
+
+      setProfile(prev =>
+        prev
+          ? { ...prev, nickname: user.nickname }
+          : prev
+      );
+    };
+
+    window.addEventListener('userUpdated', handler);
+
+    // 첫 로딩 시에도 localStorage 적용
+    handler();
+
+    return () => window.removeEventListener('userUpdated', handler);
+  }, []);
 
   /* ======================
      로그아웃
@@ -68,7 +91,7 @@ const Sidebar = () => {
           </div>
 
           <h3 className={css.nickname}>
-            {profile?.userId ?? '사용자'} <span>님</span>
+            {profile?.nickname ?? '사용자'} <span>님</span>
           </h3>
 
           <p className={css.bio}>
