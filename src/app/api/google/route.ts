@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
 import { ImageAnnotatorClient } from "@google-cloud/vision";
 
-const client = new ImageAnnotatorClient();
+const credentials = JSON.parse(
+  process.env.GOOGLE_VISION_CREDENTIALS as string
+);
+
+const client = new ImageAnnotatorClient({
+  credentials,
+  projectId: credentials.project_id,
+});
 
 export async function POST(req: Request) {
   try {
@@ -31,9 +38,7 @@ export async function POST(req: Request) {
       result.labelAnnotations?.slice(0, 5).map(l => l.description) ?? [];
 
     const objects =
-      result.localizedObjectAnnotations
-        ?.slice(0, 5)
-        .map(o => o.name) ?? [];
+      result.localizedObjectAnnotations?.slice(0, 5).map(o => o.name) ?? [];
 
     const colors =
       result.imagePropertiesAnnotation?.dominantColors?.colors
