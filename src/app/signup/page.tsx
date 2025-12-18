@@ -11,6 +11,7 @@ import {
   checkNicknameDuplicate,
   signupUser,
   validateUserId,
+  validatePassword,
 } from "./utils/signupUtils";
 
 export default function SignupPage() {
@@ -33,6 +34,12 @@ export default function SignupPage() {
   const [userIdValidation, setUserIdValidation] = useState({
     hasEnglish: false,
     isLongEnough: false,
+    isValid: false,
+  });
+  const [passwordValidation, setPasswordValidation] = useState({
+    hasUpperCase: false,
+    hasSpecialChar: false,
+    validLength: false,
     isValid: false,
   });
 
@@ -80,6 +87,17 @@ export default function SignupPage() {
     setIsNicknameChecked(result.success);
   };
 
+  // 비밀번호 변경 핸들러
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPasswordValidation(validatePassword(value));
+    if (value && passwordCheck) {
+      setPasswordMatch(value === passwordCheck);
+    } else {
+      setPasswordMatch(null);
+    }
+  };
+
   // 회원가입 요청
   const handleSignup = async () => {
     if (!userId || !nickname || !phoneNumber || !password || !passwordCheck) {
@@ -101,6 +119,13 @@ export default function SignupPage() {
 
     if (!isNicknameChecked) {
       setPopupMessage("닉네임 중복 확인을 해주세요.");
+      return;
+    }
+
+    // 비밀번호 유효성 검사
+    const passwordVal = validatePassword(password);
+    if (!passwordVal.isValid) {
+      setPopupMessage("비밀번호는 대문자, 특수문자를 포함하여 8~20자 이내여야 합니다.");
       return;
     }
 
@@ -157,7 +182,7 @@ export default function SignupPage() {
         phoneNumber={phoneNumber}
         setPhoneNumber={handlePhoneNumberChange}
         password={password}
-        setPassword={setPassword}
+        setPassword={handlePasswordChange}
         passwordCheck={passwordCheck}
         setPasswordCheck={setPasswordCheck}
         isUserIdChecked={isUserIdChecked}
@@ -170,6 +195,7 @@ export default function SignupPage() {
         setPasswordMatch={setPasswordMatch}
         phoneNumberError={phoneNumberError}
         userIdValidation={userIdValidation}
+        passwordValidation={passwordValidation}
         onCheckUserId={handleCheckUserId}
         onCheckNickname={handleCheckNickname}
         onCheckPhoneNumber={handleCheckPhoneNumber}

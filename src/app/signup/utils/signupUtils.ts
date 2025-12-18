@@ -21,6 +21,21 @@ export const validateUserId = (userId: string): {
   return { hasEnglish, isLongEnough, isValid };
 };
 
+// 비밀번호 유효성 검사
+export const validatePassword = (password: string): {
+  hasUpperCase: boolean;
+  hasSpecialChar: boolean;
+  validLength: boolean;
+  isValid: boolean;
+} => {
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  const validLength = password.length >= 8 && password.length <= 20;
+  const isValid = hasUpperCase && hasSpecialChar && validLength;
+
+  return { hasUpperCase, hasSpecialChar, validLength, isValid };
+};
+
 const API_BASE_URL = "https://after-ungratifying-lilyanna.ngrok-free.dev";
 
 // 아이디 중복 확인 API
