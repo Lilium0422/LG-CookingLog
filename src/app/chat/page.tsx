@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./Chat.module.css";
 import ChatHeader from "./components/ChatHeader";
 import ChatMessages from "./components/ChatMessages";
@@ -14,6 +14,11 @@ export interface Message {
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // 페이지 로드 시 스크롤을 맨 위로
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const sendMessage = async (text: string, file?: File | null) => {
     if (!text && !file) return;
