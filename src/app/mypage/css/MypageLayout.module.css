@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  gap: 100px;
+}
+
+.sidebar {
+  width: 350px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; /* 사이드바 위 → 콘텐츠 아래 */
+    gap: 20px; /* 모바일은 간격 줄이기 */
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+}

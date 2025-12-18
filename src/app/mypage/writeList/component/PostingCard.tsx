@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useRouter } from 'next/navigation';
 import css from '../css/PostingCard.module.css';
 
 export interface PostingCardProps {
@@ -9,30 +10,40 @@ export interface PostingCardProps {
   category: string;
   title: string;
   date: string;
-  commentCount: number;
   rating: number;
-  likeCount: number;
 }
 
-const PostingCard = ({
-  id,
-  category,
-  title,
-  date,
-  commentCount,
-  rating,
-  likeCount,
-}: PostingCardProps) => {
+const PostingCard = ({ id, category, title, date, rating }: PostingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-
+  const [commentCount, setCommentCount] = useState<number>(0);
   const toggleRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const shareUrl =
     typeof window !== 'undefined'
       ? `${window.location.origin}/post/${id}`
       : '';
+
+  // 댓글 수 조회
+  useEffect(() => {
+    const fetchCommentCount = async () => {
+      try {
+        const res = await fetch(
+          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/${id}/comments/count`,
+          { credentials: 'include' }
+        );
+        if (!res.ok) throw new Error('댓글 수 조회 실패');
+        const data = await res.json();
+        setCommentCount(data.count || 0);
+      } catch (err) {
+        console.error(err);
+        setCommentCount(0);
+      }
+    };
+    fetchCommentCount();
+  }, [id]);
 
   /* 바깥 클릭 닫기 */
   useEffect(() => {
@@ -91,7 +102,11 @@ const PostingCard = ({
   return (
     <>
       {/* 카드 */}
-      <div className={css.cardCon}>
+      <div
+        className={css.cardCon}
+        onClick={() => router.push(`/recipes/${id}`)}
+        style={{ cursor: 'pointer' }}
+      >
         <div className={css.cardHead}>
           <div className={css.textWrapper}>
             <div className={css.category}>{category}</div>
@@ -102,7 +117,10 @@ const PostingCard = ({
           <div className={css.toggle} ref={toggleRef}>
             <button
               className={css.togBtn}
-              onClick={() => setIsOpen((p) => !p)}
+              onClick={(e) => {
+                e.stopPropagation(); // 카드 클릭 이벤트 방지
+                setIsOpen((p) => !p);
+              }}
             >
               <img src="/icon/mypageToggle-icon.svg" alt="메뉴" />
             </button>
@@ -111,7 +129,8 @@ const PostingCard = ({
               <div className={css.actionModal}>
                 <button
                   className={css.actionItem}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setIsShareOpen(true);
                     setIsOpen(false);
                   }}
@@ -119,9 +138,7 @@ const PostingCard = ({
                   공유
                 </button>
                 <button className={css.actionItem}>수정</button>
-                <button className={`${css.actionItem} ${css.delete}`}>
-                  삭제
-                </button>
+                <button className={`${css.actionItem} ${css.delete}`}>삭제</button>
               </div>
             )}
           </div>
@@ -129,17 +146,14 @@ const PostingCard = ({
 
         <div className={css.postMeta}>
           <div className={css.comment}>
-            <img src="/icon/comment-icon.svg" />
+            <img src="/icon/comment-icon.svg" alt="댓글" />
             <span>{commentCount}</span>
           </div>
           <div className={css.rating}>
-            <img src="/icon/star-icon.svg" />
+            <img src="/icon/star-icon.svg" alt="평점" />
             <span>{rating}</span>
           </div>
-          <div className={css.heart}>
-            <img src="/icon/heart-icon.svg" />
-            <span>{likeCount}</span>
-          </div>
+          {/* likeCount 제거 */}
         </div>
       </div>
 

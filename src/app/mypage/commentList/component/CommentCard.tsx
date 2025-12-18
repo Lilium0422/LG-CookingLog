@@ -22,7 +22,7 @@ const CommentCard = ({
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/post/${postId}`);
+    router.push(`/recipes/${postId}`);
   };
 
   return (

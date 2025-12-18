@@ -1,39 +1,65 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import PostingCard from './PostingCard';
 import css from '../css/PostingCardList.module.css';
 
-const PostingCardList = () => {
-  // 🔹 임시 데이터 (나중에 API로 교체)
-  const posts = [
-    {
-      id: 1,
-      category: '한식',
-      title: '맛있는 요리1',
-      date: '2025.12.16',
-      commentCount: 10,
-      rating: 4.5,
-      likeCount: 10,
-    },
-    {
-      id: 2,
-      category: '중식',
-      title: '집에서 만드는 마파두부',
-      date: '2025.12.15',
-      commentCount: 3,
-      rating: 4.2,
-      likeCount: 7,
-    },
-    {
-      id: 3,
-      category: '양식',
-      title: '파스타 제대로 만드는 법',
-      date: '2025.12.14',
-      commentCount: 20,
-      rating: 4.8,
-      likeCount: 33,
-    },
-  ];
+interface Post {
+  id: number;
+  category: string;
+  title: string;
+  date: string;
+  commentCount: number;
+  rating: number;
+  likeCount: number;
+}
+
+interface PostingCardListProps {
+  nickname: string; // 조회할 사용자 닉네임
+}
+
+const PostingCardList = ({ nickname }: PostingCardListProps) => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const API_URL = `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/user/${nickname}`;
+
+  /** 사용자별 게시글 조회 */
+  const fetchUserPosts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(API_URL, {
+        credentials: 'include', // 쿠키/세션 인증 포함
+      });
+
+      if (!res.ok) {
+        console.error('사용자 게시글 조회 실패, status:', res.status);
+        setPosts([]);
+        setLoading(false);
+        return;
+      }
+
+      const data: Post[] = await res.json();
+      setPosts(data || []);
+      console.log(posts);
+    } catch (err) {
+      console.error('사용자 게시글 조회 에러:', err);
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (nickname) {
+      fetchUserPosts();
+    }
+  }, [nickname]);
+
+  if (loading) return <div className={css.loading}>게시글을 불러오는 중...</div>;
+
+  if (posts.length === 0)
+    return <div className={css.noData}>작성한 게시글이 없습니다.</div>;
 
   return (
     <section className={css.listContainer}>
@@ -44,9 +70,7 @@ const PostingCardList = () => {
           category={post.category}
           title={post.title}
           date={post.date}
-          commentCount={post.commentCount}
           rating={post.rating}
-          likeCount={post.likeCount}
         />
       ))}
     </section>

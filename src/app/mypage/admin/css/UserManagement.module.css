@@ -1,0 +1,47 @@
+.search {
+  padding: 10px 12px;
+  margin: 16px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 240px;
+  font-size: 14px;
+}
+
+/* 테이블 */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.table th {
+  background: #f4f4f4;
+  font-weight: 600;
+}
+
+.table tr:hover {
+  background: #fafafa;
+}
+
+/* 버튼 */
+.table button {
+  padding: 6px 10px;
+  border: none;
+  background: #d9534f;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.table button:hover {
+  background: #c9302c;
+}

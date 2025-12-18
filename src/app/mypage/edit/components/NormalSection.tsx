@@ -113,9 +113,12 @@ const NormalSection = () => {
         <h4>닉네임</h4>
         <input
           type="text"
-          name="nickName"
+          name="nickname"
           value={form.nickname}
           onChange={handleChange}
+          onFocus={(e) => {
+            e.target.select();  
+          }}
         />
 
         <h4>휴대폰 번호</h4>
@@ -124,6 +127,9 @@ const NormalSection = () => {
           name="phoneNumber"
           value={form.phoneNumber}
           onChange={handleChange}
+          onFocus={(e) => {
+            e.target.select();  
+          }}
         />
 
         <button onClick={handleSave} disabled={loading}>

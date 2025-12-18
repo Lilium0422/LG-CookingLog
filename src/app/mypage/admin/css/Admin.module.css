@@ -1,0 +1,11 @@
+.adminContainer {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.adminContainer h1 {
+  font-size: 28px;
+  font-weight: 700;
+}
