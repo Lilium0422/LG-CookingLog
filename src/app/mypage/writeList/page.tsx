@@ -7,7 +7,7 @@ import PostingCardList from './component/PostingCardList';
 import { fetchProfile } from '../api/profileApi'; // 유저 정보 가져오는 API
 
 const Page = () => {
-  const [nickname, setNickname] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [postCount, setPostCount] = useState<number | null>(null); // 총 게시글 수
 
@@ -15,11 +15,11 @@ const Page = () => {
     const getProfileAndPostCount = async () => {
       try {
         const data = await fetchProfile(); // 사용자 프로필
-        setNickname(data.nickname);
+        setUserId(data.userId);
 
         // 총 게시글 수 조회
         const res = await fetch(
-          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/user/${data.nickname}`,
+          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/user/${data.userId}`,
           { credentials: 'include' }
         );
         if (!res.ok) throw new Error('총 게시글 수 조회 실패');
@@ -49,8 +49,8 @@ const Page = () => {
           </div>
         )}
 
-        {nickname ? (
-          <PostingCardList nickname={nickname} />
+        {userId ? (
+          <PostingCardList userId={userId} />
         ) : (
           <div className={css.noData}>사용자 정보를 가져올 수 없습니다.</div>
         )}

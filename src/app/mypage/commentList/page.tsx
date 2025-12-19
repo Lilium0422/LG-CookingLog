@@ -15,11 +15,11 @@ const Page = () => {
     const getProfileAndComments = async () => {
       try {
         const data = await fetchProfile(); // 사용자 프로필
-        setNickname(data.nickname);
+        setNickname(data.userId);
 
         // 총 댓글 수 조회
         const res = await fetch(
-          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/users/${data.nickname}/comments/count`,
+          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/users/${data.userId}/comments/count`,
           { credentials: 'include' }
         );
         if (!res.ok) throw new Error('총 댓글 수 조회 실패');
