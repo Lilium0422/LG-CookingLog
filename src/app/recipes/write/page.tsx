@@ -17,7 +17,7 @@ interface RecipeFormData {
   userNickname: string;
 }
 
-const categories = ["한식", "양식", "중식", "일식", "분식", "디저트"];
+const categories = ["한식", "양식", "중식", "일식", "분식", "디저트", "기타"];
 
 export default function RecipeWritePage() {
   const router = useRouter();

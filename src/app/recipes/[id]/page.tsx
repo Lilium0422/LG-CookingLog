@@ -113,7 +113,9 @@ export default function RecipeDetailPage() {
         {
           headers: {
             "ngrok-skip-browser-warning": "true",
-            ...(currentUser && { "User-Nickname": currentUser }), // 로그인한 경우에만 헤더 추가
+            ...(currentUser && {
+              "User-Nickname": encodeURIComponent(currentUser),
+            }), // 로그인한 경우에만 헤더 추가 (한글 인코딩)
           },
         }
       );
@@ -121,13 +123,25 @@ export default function RecipeDetailPage() {
         const data: Comment[] = await response.json();
         console.log("댓글 데이터:", data); // 디버깅용
         console.log("현재 사용자:", currentUser); // 디버깅용
+
+        // 닉네임 디코딩 처리
+        const decodedData = data.map((comment) => ({
+          ...comment,
+          userNickname: decodeURIComponent(comment.userNickname),
+          replies:
+            comment.replies?.map((reply) => ({
+              ...reply,
+              userNickname: decodeURIComponent(reply.userNickname),
+            })) || [],
+        }));
+
         // 각 댓글의 좋아요 상태 로그
-        data.forEach((comment) => {
+        decodedData.forEach((comment) => {
           console.log(
             `댓글 ${comment.id}: 좋아요 ${comment.likeCount}개, 내가 좋아요 했나? ${comment.isLikedByUser}`
           );
         });
-        setComments(data);
+        setComments(decodedData);
       } else {
         console.error("댓글 조회 실패:", response.status, response.statusText);
         const errorText = await response.text();
@@ -155,7 +169,14 @@ export default function RecipeDetailPage() {
         if (response.ok) {
           const data: RecipeDetail = await response.json();
           console.log("레시피 데이터:", data); // 디버깅용
-          setRecipe(data);
+
+          // 닉네임 디코딩 처리
+          const decodedRecipe = {
+            ...data,
+            userNickname: decodeURIComponent(data.userNickname),
+          };
+
+          setRecipe(decodedRecipe);
         } else {
           console.error(
             "레시피 조회 실패:",
@@ -181,9 +202,10 @@ export default function RecipeDetailPage() {
   const fetchPostLikeStatus = useCallback(async () => {
     try {
       const userData = localStorage.getItem("user");
-      if (!userData) return;
+      if (!userData || !currentUser) return;
 
-      const token = localStorage.getItem("token"); // 토큰은 별도 키로 저장됨
+      const token = localStorage.getItem("token");
+
       const response = await fetch(
         `https://after-ungratifying-lilyanna.ngrok-free.dev/api/likes/status/${recipeId}`,
         {
@@ -202,7 +224,7 @@ export default function RecipeDetailPage() {
     } catch (error) {
       console.error("게시글 좋아요 상태 조회 실패:", error);
     }
-  }, [recipeId]);
+  }, [recipeId, currentUser]);
 
   // 댓글 목록 가져오기 (별도 useEffect)
   useEffect(() => {
@@ -296,7 +318,7 @@ export default function RecipeDetailPage() {
           headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
-            "User-Nickname": currentUser,
+            "User-Nickname": encodeURIComponent(currentUser),
           },
           body: JSON.stringify({
             content: newComment,
@@ -309,7 +331,14 @@ export default function RecipeDetailPage() {
 
       if (response.ok) {
         const newCommentData: Comment = await response.json();
-        setComments([...comments, newCommentData]);
+
+        // 새 댓글 닉네임 디코딩 처리
+        const decodedNewComment = {
+          ...newCommentData,
+          userNickname: decodeURIComponent(newCommentData.userNickname),
+        };
+
+        setComments([...comments, decodedNewComment]);
         setNewComment("");
         setNewRating(0);
         // alert 제거 - 자연스럽게 댓글이 추가됨
@@ -348,7 +377,7 @@ export default function RecipeDetailPage() {
           headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
-            "User-Nickname": currentUser,
+            "User-Nickname": encodeURIComponent(currentUser),
           },
           body: JSON.stringify({
             content: replyContent,
@@ -432,7 +461,7 @@ export default function RecipeDetailPage() {
           headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
-            "User-Nickname": currentUser,
+            "User-Nickname": encodeURIComponent(currentUser),
           },
           body: JSON.stringify({
             content: editContent,
@@ -481,7 +510,7 @@ export default function RecipeDetailPage() {
           method: "DELETE",
           headers: {
             "ngrok-skip-browser-warning": "true",
-            "User-Nickname": currentUser,
+            "User-Nickname": encodeURIComponent(currentUser),
           },
         }
       );
@@ -515,6 +544,11 @@ export default function RecipeDetailPage() {
       }
 
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("인증 토큰이 없습니다. 다시 로그인해주세요.");
+        return;
+      }
 
       const response = await fetch(
         `https://after-ungratifying-lilyanna.ngrok-free.dev/api/likes/toggle/${recipeId}`,
@@ -555,7 +589,7 @@ export default function RecipeDetailPage() {
           method: "POST",
           headers: {
             "ngrok-skip-browser-warning": "true",
-            "User-Nickname": currentUser,
+            "User-Nickname": encodeURIComponent(currentUser),
           },
         }
       );
