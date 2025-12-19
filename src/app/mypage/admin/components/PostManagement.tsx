@@ -6,8 +6,8 @@ import css from '../css/PostManagement.module.css';
 interface Post {
   id: number;
   title: string;
-  author: string;
-  createDate: string;
+  userNickname: string;
+  createdAt: string;
 }
 
 export default function PostManagement() {
@@ -96,8 +96,8 @@ export default function PostManagement() {
               <tr key={post.id}>
                 <td>{post.id}</td>
                 <td>{post.title}</td>
-                <td>{post.author}</td>
-                <td>{post.createDate}</td>
+                <td>{post.userNickname}</td>
+                <td>{post.createdAt}</td>
                 <td>
                   <button className={css.deleteBtn} onClick={() => handleDelete(post.id)}>
                     삭제

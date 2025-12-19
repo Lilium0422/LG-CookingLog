@@ -1,7 +1,9 @@
 .tabs {
   display: flex;
   justify-content: space-between;
-  margin: 50px;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  margin-left: 60px;
   height: 50px;
   box-sizing: border-box;
   width: 50vw;
@@ -112,8 +114,12 @@
 }
 
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .tabItem {
     font-size: 0.8rem;
+  }
+
+  .tabs {
+    margin-left: 20px;
   }
 }

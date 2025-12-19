@@ -58,7 +58,7 @@ const NormalSection = () => {
     try {
       setLoading(true);
 
-      // ⭐ 백엔드 요구 형식 맞추기
+      // 백엔드 요구 형식 맞추기
       const updateData = {
         nickname: form.nickname,
         phoneNumber: form.phoneNumber,
@@ -94,6 +94,8 @@ const NormalSection = () => {
         })
       );
 
+      window.dispatchEvent(new Event("userUpdated"));
+      
       alert('회원 정보가 저장되었습니다.');
     } catch (error) {
       console.error(error);

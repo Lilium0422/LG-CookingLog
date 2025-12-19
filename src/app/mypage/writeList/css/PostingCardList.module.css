@@ -1,7 +1,19 @@
 .listContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(375px, 1fr));
   gap: 24px;
 
-  justify-items: center;
+  /* 기본: 데스크탑에서는 카드 2개 고정 */
+  grid-template-columns: repeat(2, 1fr);
+
+  width: 100%;
+  max-width: 1000px; 
+  margin: 0 auto;
+}
+
+/* 화면이 줄어들면 1개로 변경 */
+@media (max-width: 768px) {
+  .listContainer {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
 }

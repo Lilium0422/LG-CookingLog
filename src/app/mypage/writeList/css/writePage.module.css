@@ -3,3 +3,43 @@
   min-height: 100vh;
   background-color: #f8f9fa;
 }
+
+/* 사이드바 오른쪽 전체 레이아웃 (세로 정렬) */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* 요소들 사이 간격 */
+  margin-bottom: 50px;
+
+  padding: 0 40px;
+}
+
+/* 총 게시글 수 텍스트 스타일 */
+.totalCount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 8px;
+  margin-left: 30px;
+}
+
+.totalCount span {
+  font-size: 16px;
+  color: #f36e5c;
+}
+
+/* 모바일 화면에서는 좌측 여백 주기 */
+@media (max-width: 768px) {
+  .content {
+    max-width: 600px;
+    padding: 0 40px; /* 내부 패딩 → 여백이 너무 붙는 걸 방지 */
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    max-width: 100%;
+    padding: 0 30px;
+  }
+}

@@ -19,11 +19,12 @@ const Page = () => {
 
         // 총 게시글 수 조회
         const res = await fetch(
-          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/user/${data.userId}`,
+          `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/userid/${data.userId}`,
           { credentials: 'include' }
         );
         if (!res.ok) throw new Error('총 게시글 수 조회 실패');
         const posts = await res.json(); // 게시글 배열
+        console.log(posts, '게시글 확인'); // 디버깅 용
         setPostCount(posts.length);
       } catch (err) {
         console.error('프로필 또는 게시글 수 조회 실패:', err);
@@ -45,7 +46,7 @@ const Page = () => {
         {/* 총 게시글 수 표시 */}
         {postCount !== null && (
           <div className={css.totalCount}>
-            총 게시글 수: {postCount}개
+            총 게시글 수: <span>{postCount}</span>개
           </div>
         )}
 
