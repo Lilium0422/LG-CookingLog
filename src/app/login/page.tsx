@@ -60,6 +60,7 @@ export default function LoginPage() {
         phoneNumber: data.user?.phoneNumber,
         bio: data.user?.bio,
         profileImageUrl: data.user?.profileImageUrl,
+        role: data.user?.role,
       };
 
       console.log("저장할 유저 정보:", userInfo);

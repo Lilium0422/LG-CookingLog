@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import css from '../css/PostManagement.module.css';
 
 interface Post {
@@ -16,31 +16,30 @@ export default function PostManagement() {
 
   const API_URL = 'https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts';
 
-  /** 게시글 조회 */
-  const fetchPosts = async () => {
+  /** 게시글 조회 - useCallback으로 감싸기 */
+  const fetchPosts = useCallback(async () => {
     try {
       const res = await fetch(API_URL, {
-        credentials: 'include', // 쿠키/세션 포함
+        credentials: 'include',
       });
 
       if (!res.ok) {
         console.error('게시글 조회 실패, status:', res.status);
-        setPosts([]); // 실패 시 빈 배열
+        setPosts([]);
         return;
       }
 
       const data: Post[] = await res.json();
-
-      setPosts(data || []); // 안전하게 배열 처리
+      setPosts(data || []);
     } catch (err) {
       console.error('게시글 조회 에러:', err);
       setPosts([]);
     }
-  };
+  }, [API_URL]); // 의존성 배열에 API_URL 추가 (상수라면 생략 가능하지만 넣는 것이 안전)
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [fetchPosts]); // 2. 이제 의존성 배열에 안전하게 추가 가능
 
   /** 게시글 삭제 */
   const handleDelete = async (id: number) => {

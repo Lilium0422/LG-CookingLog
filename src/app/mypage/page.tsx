@@ -18,8 +18,7 @@ export default function MyPage() {
 
     try {
       const parsed = JSON.parse(stored);
-      const role = parsed?.user?.role;
-
+      const role = parsed?.role;
       if (role === 'ADMIN') {
         setIsAdmin(true);
         router.replace('/mypage/admin');
