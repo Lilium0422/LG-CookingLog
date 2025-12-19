@@ -53,7 +53,7 @@ const transformRecipe = (recipe: Recipe): RecipeCardData => ({
   rating: recipe.rating || 0,
   category: recipe.category,
   hashtags: recipe.tags?.map((tag) => `#${tag}`) || [],
-  author: recipe.userNickname,
+  author: decodeURIComponent(recipe.userNickname), // 닉네임 디코딩
   createdAt: formatDate(recipe.createdAt),
 });
 
@@ -219,6 +219,9 @@ export default function RecipesPage() {
   const [recipeRatings, setRecipeRatings] = useState<{ [key: number]: number }>(
     {}
   ); // 레시피별 평균 별점
+  const [recipeLikeCounts, setRecipeLikeCounts] = useState<{
+    [key: number]: number;
+  }>({}); // 레시피별 좋아요 개수
   const [showLikedOnly, setShowLikedOnly] = useState(false); // 좋아요한 게시글만 보기
   const [likedRecipes, setLikedRecipes] = useState<number[]>([]); // 좋아요한 게시글 ID 목록
   const [sortType, setSortType] = useState<"latest" | "likes">("latest"); // 정렬 타입
@@ -276,6 +279,29 @@ export default function RecipesPage() {
     [calculateAverageRating]
   );
 
+  // 개별 레시피의 좋아요 개수 가져오기
+  const fetchRecipeLikeCount = useCallback(async (recipeId: number) => {
+    try {
+      const response = await fetch(
+        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/likes/status/${recipeId}`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setRecipeLikeCounts((prev) => ({
+          ...prev,
+          [recipeId]: data.likeCount || 0,
+        }));
+      }
+    } catch (error) {
+      console.error(`레시피 ${recipeId} 좋아요 개수 조회 실패:`, error);
+    }
+  }, []);
+
   // 좋아요한 게시글 목록 가져오기
   const fetchLikedRecipes = useCallback(async () => {
     try {
@@ -322,9 +348,10 @@ export default function RecipesPage() {
           console.log("변환된 레시피 데이터:", transformedRecipes); // 디버깅용
           setRecipes(transformedRecipes);
 
-          // 각 레시피의 댓글 기반 평균 별점 가져오기
+          // 각 레시피의 댓글 기반 평균 별점과 좋아요 개수 가져오기
           transformedRecipes.forEach((recipe) => {
             fetchRecipeRating(recipe.id);
+            fetchRecipeLikeCount(recipe.id);
           });
         }
       } catch (error) {
@@ -336,7 +363,7 @@ export default function RecipesPage() {
 
     fetchRecipes();
     fetchLikedRecipes(); // 좋아요한 게시글 목록도 함께 가져오기
-  }, [fetchRecipeRating, fetchLikedRecipes]);
+  }, [fetchRecipeRating, fetchRecipeLikeCount, fetchLikedRecipes]);
 
   // 검색 및 필터링 로직
   const filteredRecipes = recipes
@@ -374,12 +401,10 @@ export default function RecipesPage() {
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       } else if (sortType === "likes") {
-        // 좋아요순: 평균 별점 기준 내림차순
-        const aRating =
-          recipeRatings[a.id] !== undefined ? recipeRatings[a.id] : a.rating;
-        const bRating =
-          recipeRatings[b.id] !== undefined ? recipeRatings[b.id] : b.rating;
-        return bRating - aRating;
+        // 좋아요순: 좋아요 개수 기준 내림차순
+        const aLikes = recipeLikeCounts[a.id] || 0;
+        const bLikes = recipeLikeCounts[b.id] || 0;
+        return bLikes - aLikes;
       }
       return 0;
     });

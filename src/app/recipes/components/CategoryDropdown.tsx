@@ -16,6 +16,7 @@ const categories = [
   "일식",
   "분식",
   "디저트",
+  "기타",
 ];
 
 export default function CategoryDropdown({
