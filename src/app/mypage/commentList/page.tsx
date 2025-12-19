@@ -7,7 +7,7 @@ import CommentCardList from './component/CommentCardList';
 import { fetchProfile } from '../api/profileApi';
 
 const Page = () => {
-  const [nickname, setNickname] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [commentCount, setCommentCount] = useState<number | null>(null); // 총 댓글 수
 
@@ -15,7 +15,7 @@ const Page = () => {
     const getProfileAndComments = async () => {
       try {
         const data = await fetchProfile(); // 사용자 프로필
-        setNickname(data.userId);
+        setUserId(data.userId);
 
         // 총 댓글 수 조회
         const res = await fetch(
@@ -49,8 +49,8 @@ const Page = () => {
           </div>
         )}
 
-        {nickname ? (
-          <CommentCardList nickname={nickname} />
+        {userId ? (
+          <CommentCardList userId={userId} />
         ) : (
           <div className={css.noData}>사용자 정보를 가져올 수 없습니다.</div>
         )}

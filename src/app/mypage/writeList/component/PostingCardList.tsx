@@ -22,7 +22,7 @@ const PostingCardList = ({ userId }: PostingCardListProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/user/${userId}`;
+  const API_URL = `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/userid/${userId}`;
 
   /** 사용자별 게시글 조회 */
   const fetchUserPosts = async () => {
