@@ -6,7 +6,6 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
-  margin-left: 50px;
 }
 
 .cardCon:hover {

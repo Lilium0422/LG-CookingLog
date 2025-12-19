@@ -5,12 +5,14 @@
   align-items: stretch;
   gap: 20px;
   max-width: 720px;
-  margin: 0 auto;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 15px;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   background-color: white;
+
+  margin-top: 50px;
+  margin-left: 88px;
 }
 
 .container h4 {
@@ -205,4 +207,15 @@
 .saveBtn:hover {
   background-color: #FF6060;
   transition: background-color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-left: 0;     /* 왼쪽 여백 제거 */
+    margin-right: 0;    /* 필요하면 추가 */
+    margin-top: 20px;   /* 위 여백도 줄이기 */
+    max-width: 100%;    /* 화면 폭 꽉 차게 */
+    border-radius: 0;   /* 모바일에서는 보통 전체폭 형태가 더 자연스러움 */
+    box-shadow: none;   /* 그림자 제거하면 더 모바일스럽게 보여 */
+  }
 }

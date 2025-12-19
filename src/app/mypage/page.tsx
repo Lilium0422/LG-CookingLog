@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import css from './mypage.module.css';
+import css from './css/MainPage.module.css';
 import MainSection from './components/MainSection';
 
 export default function MyPage() {
@@ -18,8 +18,7 @@ export default function MyPage() {
 
     try {
       const parsed = JSON.parse(stored);
-      const role = parsed?.user?.role;
-
+      const role = parsed?.role;
       if (role === 'ADMIN') {
         setIsAdmin(true);
         router.replace('/mypage/admin');
@@ -37,9 +36,7 @@ export default function MyPage() {
   // 일반 사용자 화면
   return (
     <div className={css.container}>
-      <div className={css.main}>
-        <MainSection />
-      </div>
+      <MainSection />
     </div>
   );
 }

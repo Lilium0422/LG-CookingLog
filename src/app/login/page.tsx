@@ -60,6 +60,7 @@ export default function LoginPage() {
         phoneNumber: data.user?.phoneNumber,
         bio: data.user?.bio,
         profileImageUrl: data.user?.profileImageUrl,
+        role: data.user?.role,
       };
 
       console.log("저장할 유저 정보:", userInfo);
@@ -89,6 +90,12 @@ export default function LoginPage() {
     // 실패 시에는 현재 페이지 유지
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>로그인하기</div>
@@ -105,6 +112,7 @@ export default function LoginPage() {
             className={styles.input}
             value={id}
             onChange={(e) => setId(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
         </div>
 
@@ -116,6 +124,7 @@ export default function LoginPage() {
             className={styles.input}
             value={pw}
             onChange={(e) => setPw(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
         </div>
 

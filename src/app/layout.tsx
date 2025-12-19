@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingChatButton from "@/components/FloatingChatButton";
 
+import Script from 'next/script';
+
 //브라우저 탭 제목
 export const metadata: Metadata = {
   title: "쿠킹로그 - CookingLog",
@@ -23,6 +25,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main style={{ minHeight: "calc(100vh - 140px)" }}>{children}</main>
         <Footer />
         <FloatingChatButton />
+        {/* 카카오 SDK 로드 */}
+        <Script
+          src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

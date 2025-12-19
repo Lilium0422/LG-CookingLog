@@ -5,10 +5,10 @@ import CommentCard, { CommentCardProps } from './CommentCard';
 import css from '../css/CommentCardList.module.css';
 
 interface CommentCardListProps {
-  nickname: string; // 조회할 사용자 닉네임
+  userId: string; // 조회할 사용자 닉네임
 }
 
-const CommentCardList = ({ nickname }: CommentCardListProps) => {
+const CommentCardList = ({ userId }: CommentCardListProps) => {
   const [comments, setComments] = useState<CommentCardProps[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +16,7 @@ const CommentCardList = ({ nickname }: CommentCardListProps) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/users/${nickname}/comments`,
+        `https://after-ungratifying-lilyanna.ngrok-free.dev/api/users/${userId}/comments`,
         { credentials: 'include' }
       );
 
@@ -38,10 +38,10 @@ const CommentCardList = ({ nickname }: CommentCardListProps) => {
   };
 
   useEffect(() => {
-    if (nickname) {
+    if (userId) {
       fetchUserComments();
     }
-  }, [nickname]);
+  }, [userId]);
 
   if (loading) return <div className={css.loading}>댓글을 불러오는 중...</div>;
   if (comments.length === 0)

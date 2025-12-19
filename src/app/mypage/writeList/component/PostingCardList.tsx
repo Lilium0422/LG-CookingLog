@@ -15,14 +15,14 @@ interface Post {
 }
 
 interface PostingCardListProps {
-  nickname: string; // 조회할 사용자 닉네임
+  userId: string; // 조회할 사용자 닉네임
 }
 
-const PostingCardList = ({ nickname }: PostingCardListProps) => {
+const PostingCardList = ({ userId }: PostingCardListProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/user/${nickname}`;
+  const API_URL = `https://after-ungratifying-lilyanna.ngrok-free.dev/api/posts/userid/${userId}`;
 
   /** 사용자별 게시글 조회 */
   const fetchUserPosts = async () => {
@@ -51,10 +51,10 @@ const PostingCardList = ({ nickname }: PostingCardListProps) => {
   };
 
   useEffect(() => {
-    if (nickname) {
+    if (userId) {
       fetchUserPosts();
     }
-  }, [nickname]);
+  }, [userId]);
 
   if (loading) return <div className={css.loading}>게시글을 불러오는 중...</div>;
 
@@ -71,6 +71,9 @@ const PostingCardList = ({ nickname }: PostingCardListProps) => {
           title={post.title}
           date={post.date}
           rating={post.rating}
+          onDelete={(id: number) =>
+            setPosts((prev) => prev.filter((post) => post.id !== id))
+          }
         />
       ))}
     </section>

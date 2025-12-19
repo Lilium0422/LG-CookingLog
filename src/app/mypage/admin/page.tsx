@@ -18,10 +18,10 @@ export default function AdminPage() {
 
     const user = JSON.parse(raw);
 
-    // if (user.role !== 'ADMIN') {
-    //   alert('관리자만 접근 가능합니다.');
-    //   router.push('/mypage');
-    // }
+    if (user.role !== 'ADMIN') {
+      alert('관리자만 접근 가능합니다.');
+      router.push('/mypage');
+    }
   }, []);
 
   return (
