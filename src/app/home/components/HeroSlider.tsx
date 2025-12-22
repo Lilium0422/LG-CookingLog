@@ -7,6 +7,7 @@ import styles from "./HeroSlider.module.css";
 
 export default function HeroSlider() {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [paused, setPaused] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -18,24 +19,57 @@ export default function HeroSlider() {
     return () => clearTimeout(timer);
   }, []);
 
+  // 애니메이션 시작/정지 로직
   useEffect(() => {
-    if (paused || loading) return;
+    // 정리 함수 먼저 실행
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    // 조건 확인
+    if (paused || loading) {
+      return;
+    }
 
     const slider = sliderRef.current;
-    if (!slider) return;
+    if (!slider) {
+      return;
+    }
 
-    const interval = setInterval(() => {
-      slider.scrollLeft += 0.5;
+    // 100ms 후에 애니메이션 시작 (Chrome 호환성)
+    const startTimer = setTimeout(() => {
+      intervalRef.current = setInterval(() => {
+        if (!slider || paused) return;
 
-      // 중간 지점에 도달하면 처음으로 리셋 (무한 루프 효과)
-      const halfWidth = slider.scrollWidth / 2;
-      if (slider.scrollLeft >= halfWidth) {
-        slider.scrollLeft = 0;
+        slider.scrollLeft += 1;
+
+        // 중간 지점에 도달하면 처음으로 리셋
+        const halfWidth = slider.scrollWidth / 2;
+        if (slider.scrollLeft >= halfWidth) {
+          slider.scrollLeft = 0;
+        }
+      }, 20);
+    }, 100);
+
+    // cleanup 함수
+    return () => {
+      clearTimeout(startTimer);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
-    }, 18);
-
-    return () => clearInterval(interval);
+    };
   }, [paused, loading]);
+
+  // 컴포넌트 언마운트 시 정리
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -55,7 +89,9 @@ export default function HeroSlider() {
     <div className={styles.wrapper}>
       <button
         className={styles.pauseBtn}
-        onClick={() => setPaused((prev) => !prev)}
+        onClick={() => {
+          setPaused((prev) => !prev);
+        }}
       >
         {paused ? "▶ 재생" : "⏸ 정지"}
       </button>
@@ -70,6 +106,7 @@ export default function HeroSlider() {
             width={320}
             height={210}
             className={styles.slide}
+            priority={index < 3}
           />
         ))}
         {/* 복제된 슬라이드 (무한 루프용) */}
